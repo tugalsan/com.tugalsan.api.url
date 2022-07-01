@@ -7,6 +7,7 @@ import javax.servlet.http.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
+import com.tugalsan.api.unsafe.client.*;
 
 public class TS_UrlUtils {
 
@@ -79,27 +80,18 @@ public class TS_UrlUtils {
     }
 
     public InputStream newInputStream(TGS_Url url) {
-        try {
-            return new URL(url.toString()).openConnection().getInputStream();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return TGS_UnSafe.compile(() -> new URL(url.toString()).openConnection().getInputStream());
     }
 
     public OutputStream newOutputStream(TGS_Url url) {
-        try {
-            return new URL(url.toString()).openConnection().getOutputStream();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return TGS_UnSafe.compile(() -> new URL(url.toString()).openConnection().getOutputStream());
     }
 
     public static TGS_Url toUrl(Path file) {
-        try {
-            return TGS_Url.of(file.toUri().toURL().toExternalForm());
-        } catch (Exception e) {
-            return null;
-        }
+        return TGS_UnSafe.compile(
+                () -> TGS_Url.of(file.toUri().toURL().toExternalForm()),
+                exception -> null
+        );
     }
 
     public static Path toPath(TGS_Url url) {
