@@ -89,10 +89,7 @@ public class TS_UrlUtils {
     }
 
     public static TGS_Url toUrl(Path file) {
-        return TGS_UnSafe.compile(
-                () -> TGS_Url.of(file.toUri().toURL().toExternalForm()),
-                exception -> null
-        );
+        return TGS_UnSafe.compile(() -> TGS_Url.of(file.toUri().toURL().toExternalForm()), exception -> null);
     }
 
     public static Path toPath(TGS_Url url) {
