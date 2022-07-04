@@ -11,8 +11,7 @@ import com.tugalsan.api.unsafe.client.*;
 
 public class TS_UrlUtils {
 
-    final private static TS_Log d = TS_Log.of(TS_UrlUtils.class.getSimpleName());
-
+//    final private static TS_Log d = TS_Log.of(TS_UrlUtils.class.getSimpleName());
     public static TGS_Url toUrl(HttpServletRequest rq) {
         var protocol = rq.getScheme();             // http
         var hostName = rq.getServerName();     // hostname.com
@@ -101,9 +100,6 @@ public class TS_UrlUtils {
     }
 
     public static boolean isUrl(CharSequence str) {
-        return TGS_UnSafe.compile(() -> {
-            new URL(str.toString());
-            return true;
-        }, e -> false)
+        return TGS_UnSafe.compile(() -> new URL(str.toString()) != null, e -> false);
     }
 }
