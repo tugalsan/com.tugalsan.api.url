@@ -37,31 +37,32 @@ public class TS_UrlUtils {
     }
 
     public boolean isReachable(TGS_Url urlo, Integer optionalTimeOut) {
-        URL url;
-        try {
-            url = new URL(urlo.toString());
-        } catch (Exception e) {
+        var url = TGS_UnSafe.compile(() -> new URL(urlo.toString()), e -> null);
+        if (url == null) {
             return false;
         }
+        HttpURLConnection con = null;
         try {
-            var connection = (HttpURLConnection) url.openConnection();
+            con = (HttpURLConnection) url.openConnection();
             if (optionalTimeOut != null) {
-                connection.setConnectTimeout(optionalTimeOut);
-                connection.setReadTimeout(optionalTimeOut);
+                con.setConnectTimeout(optionalTimeOut);
+                con.setReadTimeout(optionalTimeOut);
             }
-            connection.setRequestMethod("HEAD");
-            var responseCode = connection.getResponseCode();
+            con.setRequestMethod("HEAD");
+            var responseCode = con.getResponseCode();
             return (200 <= responseCode && responseCode <= 399);
         } catch (Exception e) {
             return false;//I KNOW
+        } finally {
+            if (con != null) {
+                con.disconnect();
+            }
         }
     }
 
     public Long getLengthInBytes(TGS_Url urlo) {
-        URL url;
-        try {
-            url = new URL(urlo.toString());
-        } catch (Exception e) {
+        var url = TGS_UnSafe.compile(() -> new URL(urlo.toString()), e -> null);
+        if (url == null) {
             return null;
         }
         HttpURLConnection conn = null;
@@ -72,10 +73,11 @@ public class TS_UrlUtils {
             conn.disconnect();
             return l;
         } catch (Exception e) {
+            return null;
+        } finally {
             if (conn != null) {
                 conn.disconnect();
             }
-            return null;
         }
     }
 
@@ -99,11 +101,9 @@ public class TS_UrlUtils {
     }
 
     public static boolean isUrl(CharSequence str) {
-        try {
+        return TGS_UnSafe.compile(() -> {
             new URL(str.toString());
             return true;
-        } catch (Exception e) {
-            return false;
-        }
+        }, e -> false)
     }
 }

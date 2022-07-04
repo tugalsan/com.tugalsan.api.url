@@ -8,6 +8,7 @@ import java.nio.file.*;
 import java.util.*;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
+import com.tugalsan.api.unsafe.client.*;
 
 public class TS_UrlDownloadUtils {
 
@@ -16,18 +17,25 @@ public class TS_UrlDownloadUtils {
     }
 
     public static boolean isReacable(TGS_Url sourceURL, int timeout) {
-        try {
-            var url = sourceURL.url.toString();
-            url = url.replaceFirst("^https", "http");
-            var connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.setConnectTimeout(timeout);
-            connection.setReadTimeout(timeout);
-            connection.setRequestMethod("HEAD");
-            var responseCode = connection.getResponseCode();
-            return (200 <= responseCode && responseCode <= 399);
-        } catch (Exception exception) {
-            //DO NOTHING
+        var url = sourceURL.url.toString().replaceFirst("^https", "http");
+        var urll = TGS_UnSafe.compile(() -> new URL(url), e -> null);
+        if (urll == null) {
             return false;
+        }
+        HttpURLConnection con = null;
+        try {
+            con = (HttpURLConnection) urll.openConnection();
+            con.setConnectTimeout(timeout);
+            con.setReadTimeout(timeout);
+            con.setRequestMethod("HEAD");
+            var responseCode = con.getResponseCode();
+            return (200 <= responseCode && responseCode <= 399);
+        } catch (Exception e) {
+            return false;
+        } finally {
+            if (con != null) {
+                con.disconnect();
+            }
         }
     }
 
@@ -42,39 +50,29 @@ public class TS_UrlDownloadUtils {
     }
 
     public static Path toFile(TGS_Url sourceURL, Path destFile) {
-        URL url;
-        try {
-            url = new URL(sourceURL.url.toString());
-        } catch (Exception e) {
-            return null;
-        }
-        TS_FileUtils.deleteFileIfExists(destFile);
-        try ( var fileOutputStream = new FileOutputStream(destFile.toFile());  var readableByteChannel = Channels.newChannel(url.openStream());) {
-            var fileChannel = fileOutputStream.getChannel();
-            fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-            return destFile;
-        } catch (Exception e) {
-            return null;
-        }
+        return TGS_UnSafe.compile(() -> {
+            var url = new URL(sourceURL.url.toString());
+            TS_FileUtils.deleteFileIfExists(destFile);
+            try ( var fileOutputStream = new FileOutputStream(destFile.toFile());  var readableByteChannel = Channels.newChannel(url.openStream());) {
+                var fileChannel = fileOutputStream.getChannel();
+                fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+                return destFile;
+            }
+        }, e -> null);
     }
 
     public static byte[] toByteArray(TGS_Url sourceURL) {
-        URL url;
-        try {
-            url = new URL(sourceURL.url.toString());
-        } catch (Exception e) {
-            return null;
-        }
-        try ( var baos = new ByteArrayOutputStream();  var is = url.openStream();) {
-            var byteChunk = new byte[8 * 1024];
-            int n;
-            while ((n = is.read(byteChunk)) > 0) {
-                baos.write(byteChunk, 0, n);
+        return TGS_UnSafe.compile(() -> {
+            var url = new URL(sourceURL.url.toString());
+            try ( var baos = new ByteArrayOutputStream();  var is = url.openStream();) {
+                var byteChunk = new byte[8 * 1024];
+                int n;
+                while ((n = is.read(byteChunk)) > 0) {
+                    baos.write(byteChunk, 0, n);
+                }
+                baos.flush();
+                return baos.toByteArray();
             }
-            baos.flush();
-            return baos.toByteArray();
-        } catch (Exception e) {
-            return null;
-        }
+        }, e -> null);
     }
 }
