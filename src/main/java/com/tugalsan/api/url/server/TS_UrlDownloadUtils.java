@@ -8,9 +8,12 @@ import java.nio.file.*;
 import java.util.*;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
+import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.unsafe.client.*;
 
 public class TS_UrlDownloadUtils {
+
+    final private static TS_Log d = TS_Log.of(TS_UrlDownloadUtils.class.getSimpleName());
 
     public static boolean isReacable(TGS_Url sourceURL) {
         return isReacable(sourceURL, 5);
@@ -52,7 +55,7 @@ public class TS_UrlDownloadUtils {
     public static Path toFile(TGS_Url sourceURL, Path destFile) {
         return TGS_UnSafe.compile(() -> {
             var url = new URL(sourceURL.url.toString());
-            TGS_UnSafe.execute(() -> TS_FileUtils.deleteFileIfExists(destFile), e -> TGS_UnSafe.doNothing());//skipping accces denied exception
+            TGS_UnSafe.execute(() -> TS_FileUtils.deleteFileIfExists(destFile), e -> d.ce("toFile", "skipping accces denied exception"));
             try ( var fileOutputStream = new FileOutputStream(destFile.toFile());  var readableByteChannel = Channels.newChannel(url.openStream());) {
                 var fileChannel = fileOutputStream.getChannel();
                 fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
