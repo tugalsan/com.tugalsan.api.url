@@ -54,8 +54,11 @@ public class TS_UrlDownloadUtils {
 
     public static Path toFile(TGS_Url sourceURL, Path destFile) {
         return TGS_UnSafe.compile(() -> {
+            if (!TS_FileUtils.deleteFileIfExists(destFile, true)) {
+                d.ce("toFile", "cannot delete destFile file, skipped!", sourceURL, destFile);
+                return null;
+            }
             var url = new URL(sourceURL.url.toString());
-            TGS_UnSafe.execute(() -> TS_FileUtils.deleteFileIfExists(destFile), e -> d.ce("toFile", "skipping accces denied exception"));
             try ( var fileOutputStream = new FileOutputStream(destFile.toFile());  var readableByteChannel = Channels.newChannel(url.openStream());) {
                 var fileChannel = fileOutputStream.getChannel();
                 fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);

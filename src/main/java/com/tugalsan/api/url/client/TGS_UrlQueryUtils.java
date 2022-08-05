@@ -11,7 +11,7 @@ public class TGS_UrlQueryUtils {
         return urlStr.contains("#") ? urlStr.substring(0, urlStr.indexOf("#")) : urlStr;
     }
 
-    @Deprecated
+    @Deprecated //not good practice, which param?
     public static String removeLastParam(CharSequence url) {
         var urlStr = url.toString();
         var idx = urlStr.lastIndexOf("&");
