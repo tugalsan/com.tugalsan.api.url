@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.*;
 import java.nio.file.*;
 import javax.servlet.http.*;
-import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.pack.client.*;
@@ -93,8 +92,8 @@ public class TS_UrlUtils {
         return TGS_UnSafe.compile(() -> TGS_Url.of(file.toUri().toURL().toExternalForm()), exception -> null);
     }
 
-    public static TGS_Pack2<Path, Exception> toPathAndError(TGS_Url url) {
-        return TS_PathUtils.toPathAndError(url.toString());
+    public static TGS_Pack2<Path, Exception> toPathOrError(TGS_Url url) {
+        return TS_PathUtils.toPathOrError(url.toString());
     }
 
     public static boolean isUrl(CharSequence str) {
