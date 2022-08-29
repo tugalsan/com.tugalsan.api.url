@@ -9,7 +9,7 @@ import com.tugalsan.api.pack.client.*;
 
 public class TGC_UrlQueryCurrentUtils {
 
-    final private static TGC_Log d = TGC_Log.of(TGC_UrlQueryUtils.class.getSimpleName());
+    final private static TGC_Log d = TGC_Log.of(TGC_UrlQueryUtils.class);
 
     public static String getUrlQuery() {
         var query = Window.Location.getQueryString();

@@ -9,7 +9,7 @@ import com.tugalsan.api.url.client.*;
 
 public class TS_UrlServletRequestUtils {
 
-    final private static TS_Log d = TS_Log.of(TS_UrlServletRequestUtils.class.getSimpleName());
+    final private static TS_Log d = TS_Log.of(TS_UrlServletRequestUtils.class);
 
     public static String getParameterValueFrom64(HttpServletRequest rq, CharSequence paramName) {
         var val64Safe = getParameterValue(rq, paramName, false);

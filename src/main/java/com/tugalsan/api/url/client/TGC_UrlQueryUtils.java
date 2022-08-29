@@ -8,7 +8,7 @@ import java.util.*;
 
 public class TGC_UrlQueryUtils {
 
-    final private static TGC_Log d = TGC_Log.of(TGC_UrlQueryUtils.class.getSimpleName());
+    final private static TGC_Log d = TGC_Log.of(TGC_UrlQueryUtils.class);
 
     public static String sliceQuery(CharSequence url) {
         var urlStr = url.toString();

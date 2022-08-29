@@ -13,7 +13,7 @@ import com.tugalsan.api.unsafe.client.*;
 
 public class TS_UrlDownloadUtils {
 
-    final private static TS_Log d = TS_Log.of(TS_UrlDownloadUtils.class.getSimpleName());
+    final private static TS_Log d = TS_Log.of(TS_UrlDownloadUtils.class);
 
     public static boolean isReacable(TGS_Url sourceURL) {
         return isReacable(sourceURL, 5);

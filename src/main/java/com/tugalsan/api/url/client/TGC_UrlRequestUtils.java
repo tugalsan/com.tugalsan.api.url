@@ -7,7 +7,7 @@ import com.tugalsan.api.unsafe.client.*;
 
 public class TGC_UrlRequestUtils {
 
-    final private static TGC_Log d = TGC_Log.of(TGC_UrlRequestUtils.class.getSimpleName());
+    final private static TGC_Log d = TGC_Log.of(TGC_UrlRequestUtils.class);
 
     public static int getStatusCodeOk() {
         return 200;
