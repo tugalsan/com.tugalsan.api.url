@@ -1,5 +1,6 @@
 package com.tugalsan.api.url.client;
 
+import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.user.client.*;
 import com.tugalsan.api.cast.client.*;
@@ -8,6 +9,10 @@ public class TGC_UrlCurrentUtils {
 
     public static String getServerDomainOrIp() {
         return Window.Location.getHostName();
+    }
+
+    public static String getGWTModuleBase() {
+        return GWT.getModuleBaseURL();
     }
 
     public static Integer getServerPort() {
