@@ -62,7 +62,11 @@ public class TS_UrlDownloadUtils {
             try ( var fileOutputStream = new FileOutputStream(destFile.toFile());  var readableByteChannel = Channels.newChannel(url.openStream());) {
                 var fileChannel = fileOutputStream.getChannel();
                 fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-                return destFile;
+                if (!TS_FileUtils.isEmptyFile(destFile)) {
+                    return destFile;
+                }
+                TS_FileUtils.deleteFileIfExists(destFile);
+                return null;
             }
         }, e -> null);
     }
