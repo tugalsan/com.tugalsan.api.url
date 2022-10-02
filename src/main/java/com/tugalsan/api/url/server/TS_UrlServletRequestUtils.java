@@ -32,7 +32,7 @@ public class TS_UrlServletRequestUtils {
     }
 
     public static List<String> getParameterNames(HttpServletRequest rq) {
-        return TGS_StreamUtils.toList(TGS_StreamUtils.of(rq.getParameterNames()));
+        return TGS_StreamUtils.toLst(TGS_StreamUtils.of(rq.getParameterNames()));
     }
 
     public static String getURLStringUnsafe(HttpServletRequest rq) {
