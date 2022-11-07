@@ -1,6 +1,5 @@
 package com.tugalsan.api.url.client;
 
-import com.tugalsan.api.compiler.client.*;
 import com.tugalsan.api.unsafe.client.*;
 
 public class TGC_UrlUtils {
