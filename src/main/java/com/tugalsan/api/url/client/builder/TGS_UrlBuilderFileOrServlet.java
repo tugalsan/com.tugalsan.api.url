@@ -18,8 +18,7 @@ public class TGS_UrlBuilderFileOrServlet {
         return new TGS_UrlBuilderParameter(this, paramName, paramValue);
     }
 
-    //NO PURPOSE
-//    public TGS_UrlBuilderParameter parameterNone() {
-//        return new TGS_UrlBuilderParameter(this, null, null);
-//    }
+    public TGS_UrlBuilderParameter parameterNone() {
+        return new TGS_UrlBuilderParameter(this, null, null);
+    }
 }
