@@ -38,4 +38,8 @@ public class TGS_UrlParser implements IsSerializable {
     public TGS_UrlParser cloneIt() {
         return new TGS_UrlParser(toString());
     }
+
+    public TGS_Url toUrl() {
+        return TGS_Url.of(toString());
+    }
 }
