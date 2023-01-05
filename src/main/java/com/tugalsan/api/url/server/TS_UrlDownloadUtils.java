@@ -102,10 +102,10 @@ public class TS_UrlDownloadUtils {
 
     public static Path toFile(TGS_Url sourceURL, Path destFile, Duration timeout) {
         return TGS_UnSafe.compile(() -> {
-            if (!TS_FileUtils.deleteFileIfExists(destFile, true)) {
-                d.ce("toFile", "cannot delete destFile file, skipped!", sourceURL, destFile);
-                return null;
-            }
+//            if (!TS_FileUtils.deleteFileIfExists(destFile, true)) {
+//                d.ce("toFile", "cannot delete destFile file, skipped!", sourceURL, destFile);
+//                return null;
+//            }
             var url = new URL(sourceURL.url.toString());
             var con = url.openConnection();
             if (timeout != null) {
@@ -122,7 +122,10 @@ public class TS_UrlDownloadUtils {
                 TS_FileUtils.deleteFileIfExists(destFile);
                 return null;
             }
-        }, e -> null);
+        }, e -> {
+            e.printStackTrace();
+            return null;
+        });
     }
 
     public static byte[] toByteArray(TGS_Url sourceURL) {
