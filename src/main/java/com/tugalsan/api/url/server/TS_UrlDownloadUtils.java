@@ -10,6 +10,10 @@ import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.unsafe.client.*;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 
 public class TS_UrlDownloadUtils {
 
@@ -42,7 +46,25 @@ public class TS_UrlDownloadUtils {
         }
     }
 
-    //TODO
+    //TODO https://www.tutorialspoint.com/java11/java11_standard_httpclient.htm
+//    public static Optional<TS_UrlDownloadBean<String>> toText(TGS_Url sourceURL, Optional<Duration> timeout) {
+//        var httpClient = HttpClient.newBuilder()
+//                .version(HttpClient.Version.HTTP_2);
+//        if (timeout.isPresent()) {
+//            httpClient.connectTimeout(timeout.get());
+//        }
+//        httpClient.build();
+//        return TGS_UnSafe.compile(() -> {
+//            var request = HttpRequest.newBuilder()
+////                    .timeout(Duration.ofMinutes(1))
+//                    .GET()
+//                    .uri(URI.create("https://www.google.com"))
+//                    .build();
+//        }, e -> {
+//            e.printStackTrace();
+//            return Optional.empty();
+//        });
+//    }
 //    public static String toText(TGS_Url sourceURL) {
 //        HttpClient client = HttpClient.newHttpClient();
 //        HttpRequest request = HttpRequest.newBuilder()
@@ -59,7 +81,6 @@ public class TS_UrlDownloadUtils {
 //        System.out.println(response.statusCode());
 //        System.out.println(response.body());
 //    }
-
     public static String toText(TGS_Url sourceURL) {
         var bytes = toByteArray(sourceURL);
         return bytes == null ? null : new String(bytes, StandardCharsets.UTF_8);
