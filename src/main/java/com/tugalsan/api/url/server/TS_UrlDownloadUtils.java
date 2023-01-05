@@ -10,6 +10,11 @@ import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.unsafe.client.*;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.time.Duration;
 
 public class TS_UrlDownloadUtils {
 
@@ -41,6 +46,24 @@ public class TS_UrlDownloadUtils {
             }
         }
     }
+
+    //TODO
+//    public static String toText(TGS_Url sourceURL) {
+//        HttpClient client = HttpClient.newHttpClient();
+//        HttpRequest request = HttpRequest.newBuilder()
+//                .uri(URI.create("http://openjdk.org/"))
+//                .timeout(Duration.ofMinutes(1))
+//                .header("Content-Type", "application/json")
+//                .POST(BodyPublishers.ofFile(Paths.get("file.json")))
+//                .build();
+////        client.sendAsync(request, BodyHandlers.ofString())
+////                .thenApply(HttpResponse::body)
+////                .thenAccept(System.out::println)
+////                .join();
+//        client.send(request, BodyHandlers.ofString());
+//        System.out.println(response.statusCode());
+//        System.out.println(response.body());
+//    }
 
     public static String toText(TGS_Url sourceURL) {
         var bytes = toByteArray(sourceURL);

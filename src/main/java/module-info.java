@@ -1,5 +1,6 @@
 module com.tugalsan.api.url {
     requires gwt.user;
+    requires java.net.http;
     requires com.tugalsan.api.executable;
     requires com.tugalsan.api.compiler;
     requires com.tugalsan.api.unsafe;
