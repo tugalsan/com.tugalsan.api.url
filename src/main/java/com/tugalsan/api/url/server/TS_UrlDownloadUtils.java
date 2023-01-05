@@ -78,9 +78,17 @@ public class TS_UrlDownloadUtils {
 //        System.out.println(response.statusCode());
 //        System.out.println(response.body());
 //    }
+    public static String toText(TGS_Url sourceURL) {
+        return toText(sourceURL, null);
+    }
+
     public static String toText(TGS_Url sourceURL, Duration timeout) {
         var bytes = toByteArray(sourceURL, timeout);
         return bytes == null ? null : new String(bytes, StandardCharsets.UTF_8);
+    }
+
+    public static String toBase64(TGS_Url sourceURL) {
+        return toBase64(sourceURL, null);
     }
 
     public static String toBase64(TGS_Url sourceURL, Duration timeout) {
@@ -89,13 +97,23 @@ public class TS_UrlDownloadUtils {
     }
 
     public static Path toFile(TGS_Url sourceURL, Path destFile) {
+        return toFile(sourceURL, destFile, null);
+    }
+
+    public static Path toFile(TGS_Url sourceURL, Path destFile, Duration timeout) {
         return TGS_UnSafe.compile(() -> {
             if (!TS_FileUtils.deleteFileIfExists(destFile, true)) {
                 d.ce("toFile", "cannot delete destFile file, skipped!", sourceURL, destFile);
                 return null;
             }
             var url = new URL(sourceURL.url.toString());
-            try ( var fileOutputStream = new FileOutputStream(destFile.toFile());  var readableByteChannel = Channels.newChannel(url.openStream());) {
+            var con = url.openConnection();
+            if (timeout != null) {
+                var ms = (int) timeout.toMillis();
+                con.setConnectTimeout(ms);
+                con.setReadTimeout(ms);
+            }
+            try ( var fileOutputStream = new FileOutputStream(destFile.toFile());  var is = con.getInputStream();  var readableByteChannel = Channels.newChannel(is);) {
                 var fileChannel = fileOutputStream.getChannel();
                 fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
                 if (!TS_FileUtils.isEmptyFile(destFile)) {
@@ -107,13 +125,19 @@ public class TS_UrlDownloadUtils {
         }, e -> null);
     }
 
+    public static byte[] toByteArray(TGS_Url sourceURL) {
+        return toByteArray(sourceURL, null);
+    }
+
     public static byte[] toByteArray(TGS_Url sourceURL, Duration timeout) {
         return TGS_UnSafe.compile(() -> {
             var url = new URL(sourceURL.url.toString());
             var con = url.openConnection();
-            var ms = (int) timeout.toMillis();
-            con.setConnectTimeout(ms);
-            con.setReadTimeout(ms);
+            if (timeout != null) {
+                var ms = (int) timeout.toMillis();
+                con.setConnectTimeout(ms);
+                con.setReadTimeout(ms);
+            }
             try ( var baos = new ByteArrayOutputStream();  var is = con.getInputStream();) {
                 var byteChunk = new byte[8 * 1024];
                 int n;
