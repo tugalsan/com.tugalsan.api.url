@@ -102,30 +102,36 @@ public class TS_UrlDownloadUtils {
 
     public static Path toFile(TGS_Url sourceURL, Path destFile, Duration timeout) {
         return TGS_UnSafe.compile(() -> {
-//            if (!TS_FileUtils.deleteFileIfExists(destFile, true)) {
-//                d.ce("toFile", "cannot delete destFile file, skipped!", sourceURL, destFile);
-//                return null;
-//            }
+            if (!TS_FileUtils.deleteFileIfExists(destFile, true)) {
+                d.ce("toFile", "cannot delete destFile file, skipped!", sourceURL, destFile);
+                return null;
+            }
             var url = new URL(sourceURL.url.toString());
-            var con = url.openConnection();
             if (timeout != null) {
+                var con = url.openConnection();
                 var ms = (int) timeout.toMillis();
                 con.setConnectTimeout(ms);
                 con.setReadTimeout(ms);
-            }
-            try ( var fileOutputStream = new FileOutputStream(destFile.toFile());  var is = con.getInputStream();  var readableByteChannel = Channels.newChannel(is);) {
-                var fileChannel = fileOutputStream.getChannel();
-                fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-                if (!TS_FileUtils.isEmptyFile(destFile)) {
-                    return destFile;
+                try ( var fileOutputStream = new FileOutputStream(destFile.toFile());  var is = con.getInputStream();  var readableByteChannel = Channels.newChannel(is);) {
+                    var fileChannel = fileOutputStream.getChannel();
+                    fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+                    if (!TS_FileUtils.isEmptyFile(destFile)) {
+                        return destFile;
+                    }
+                    TS_FileUtils.deleteFileIfExists(destFile);
+                    return null;
                 }
-                TS_FileUtils.deleteFileIfExists(destFile);
-                return null;
             }
-        }, e -> {
-            e.printStackTrace();
-            return null;
-        });
+            try ( var fileOutputStream = new FileOutputStream(destFile.toFile());  var readableByteChannel = Channels.newChannel(url.openStream());) {
+                    var fileChannel = fileOutputStream.getChannel();
+                    fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+                    if (!TS_FileUtils.isEmptyFile(destFile)) {
+                        return destFile;
+                    }
+                    TS_FileUtils.deleteFileIfExists(destFile);
+                    return null;
+                }
+        }, e -> null);
     }
 
     public static byte[] toByteArray(TGS_Url sourceURL) {
