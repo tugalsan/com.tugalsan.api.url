@@ -43,7 +43,7 @@ public class TS_UrlDownloadUtils {
         }
     }
 
-    //TODO HTTP JDK12  https://www.tutorialspoint.com/java11/java11_standard_httpclient.htm
+//TODO HTTP JDK12  HOW TO DOWNLAOD: https://www.tutorialspoint.com/java11/java11_standard_httpclient.htm
 //    public static Optional<TS_UrlDownloadBean<String>> toText(TGS_Url sourceURL, Optional<Duration> timeout) {
 //        var httpClient = HttpClient.newBuilder()
 //                .version(HttpClient.Version.HTTP_2);
