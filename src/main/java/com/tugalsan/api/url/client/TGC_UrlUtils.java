@@ -5,7 +5,7 @@ import com.tugalsan.api.unsafe.client.*;
 public class TGC_UrlUtils {
 
     public static String parseIPAndPort(CharSequence url) {
-        return TGS_UnSafe.compile(() -> {
+        return TGS_UnSafe.call(() -> {
             var urlStr = url.toString();
             var ss = TGS_UrlUtils.isSecure(url) ? "https://" : "http://";
             var s = urlStr.indexOf(ss);
@@ -17,7 +17,7 @@ public class TGC_UrlUtils {
     }
 
     public static String parsePort(CharSequence ipAndPort) {
-        return TGS_UnSafe.compile(() -> {
+        return TGS_UnSafe.call(() -> {
             var ipAndPortStr = ipAndPort.toString();
             var ss = ":";
             var s = ipAndPortStr.indexOf(ss);
@@ -26,7 +26,7 @@ public class TGC_UrlUtils {
     }
 
     public static String parseIp(CharSequence ipAndPort) {
-        return TGS_UnSafe.compile(() -> {
+        return TGS_UnSafe.call(() -> {
             var ipAndPortStr = ipAndPort.toString();
             var ss = ":";
             var s = ipAndPortStr.indexOf(ss);

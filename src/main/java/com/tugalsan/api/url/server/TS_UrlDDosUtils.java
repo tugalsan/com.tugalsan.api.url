@@ -21,7 +21,7 @@ public class TS_UrlDDosUtils {
     }
 
     public static void attackOnce(String urlString, String paramPair) {
-        var url = TGS_UnSafe.compile(() -> new URL(urlString), e -> null);
+        var url = TGS_UnSafe.call(() -> new URL(urlString), e -> null);
         HttpsURLConnection con = null;
         try {//https://github.com/Abdelaziz-Khabthani/Ddos-java/blob/master/DdosAttack.java
             con = (HttpsURLConnection) url.openConnection();

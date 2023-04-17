@@ -10,13 +10,13 @@ public class TS_UrlQueryUtils {
         if (paramValueReadable == null) {
             return null;
         }
-        return TGS_UnSafe.compile(() -> URLEncoder.encode(paramValueReadable.toString(), StandardCharsets.UTF_8).replace("\\+", "%20"));
+        return TGS_UnSafe.call(() -> URLEncoder.encode(paramValueReadable.toString(), StandardCharsets.UTF_8).replace("\\+", "%20"));
     }
 
     public static String toParamValueReadable(CharSequence paramValueSafe) {
         if (paramValueSafe == null) {
             return null;
         }
-        return TGS_UnSafe.compile(() -> URLDecoder.decode(paramValueSafe.toString(), StandardCharsets.UTF_8));
+        return TGS_UnSafe.call(() -> URLDecoder.decode(paramValueSafe.toString(), StandardCharsets.UTF_8));
     }
 }

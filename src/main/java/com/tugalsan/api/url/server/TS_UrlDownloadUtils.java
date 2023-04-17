@@ -22,7 +22,7 @@ public class TS_UrlDownloadUtils {
 
     public static boolean isReacable(TGS_Url sourceURL, int timeout) {
         var url = sourceURL.url.toString().replaceFirst("^https", "http");
-        var urll = TGS_UnSafe.compile(() -> new URL(url), e -> null);
+        var urll = TGS_UnSafe.call(() -> new URL(url), e -> null);
         if (urll == null) {
             return false;
         }
@@ -51,7 +51,7 @@ public class TS_UrlDownloadUtils {
 //            httpClient.connectTimeout(timeout.get());
 //        }
 //        httpClient.build();
-//        return TGS_UnSafe.compile(() -> {
+//        return TGS_UnSafe.call(() -> {
 //            var request = HttpRequest.newBuilder()
 ////                    .timeout(Duration.ofMinutes(1))
 //                    .GET()
@@ -101,7 +101,7 @@ public class TS_UrlDownloadUtils {
     }
 
     public static Path toFile(TGS_Url sourceURL, Path destFile, Duration timeout) {
-        return TGS_UnSafe.compile(() -> {
+        return TGS_UnSafe.call(() -> {
             if (!TS_FileUtils.deleteFileIfExists(destFile, true)) {
                 d.ce("toFile", "cannot delete destFile file, skipped!", sourceURL, destFile);
                 return null;
@@ -139,7 +139,7 @@ public class TS_UrlDownloadUtils {
     }
 
     public static byte[] toByteArray(TGS_Url sourceURL, Duration timeout) {
-        return TGS_UnSafe.compile(() -> {
+        return TGS_UnSafe.call(() -> {
             var url = new URL(sourceURL.url.toString());
             var con = url.openConnection();
             if (timeout != null) {

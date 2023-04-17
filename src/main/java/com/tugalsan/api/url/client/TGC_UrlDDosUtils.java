@@ -17,7 +17,7 @@ public class TGC_UrlDDosUtils {
         parser.quary.setParameterValueUrlSafe("p", TGS_UrlQueryUtils.readable_2_Param64UrlSafe(
                 String.valueOf(TGS_RandomUtils.nextInt(0, Integer.MAX_VALUE)))
         );
-        TGS_UnSafe.execute(() -> {
+        TGS_UnSafe.run(() -> {
             var builder = new RequestBuilder(RequestBuilder.GET, URL.encode(parser.toString()));
             builder.sendRequest(null, new RequestCallback() {
                 @Override
@@ -28,6 +28,6 @@ public class TGC_UrlDDosUtils {
                 public void onResponseReceived(Request request, Response response) {
                 }
             });
-        }, e -> TGS_StreamUtils.doNothing());
+        }, e -> TGS_StreamUtils.runNothing());
     }
 }
