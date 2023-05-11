@@ -3,6 +3,7 @@ package com.tugalsan.api.url.client.parser;
 import com.google.gwt.user.client.rpc.*;
 import com.tugalsan.api.list.client.*;
 import com.tugalsan.api.string.client.*;
+import com.tugalsan.api.url.client.TGS_Url;
 import java.util.*;
 import java.util.stream.*;
 
@@ -16,7 +17,7 @@ public class TGS_UrlParserQuary implements IsSerializable {
     private TGS_UrlParserPath path;
 
     public TGS_UrlParserQuary(TGS_UrlParserProtocol protocol, TGS_UrlParserHost host,
-            TGS_UrlParserPath path, CharSequence url) {
+            TGS_UrlParserPath path, TGS_Url url) {
         this.protocol = protocol;
         this.host = host;
         this.path = path;
@@ -83,6 +84,10 @@ public class TGS_UrlParserQuary implements IsSerializable {
         return params.isEmpty() ? "" : params.stream().map(pair -> String.valueOf(pair)).collect(Collectors.joining("&", "?", ""));
     }
 
+    public TGS_Url toUrl(){
+        return TGS_Url.of(toString_url());
+    }
+    
     public String toString_url() {
         var pr = protocol.toString();
         var ho = host.toString();

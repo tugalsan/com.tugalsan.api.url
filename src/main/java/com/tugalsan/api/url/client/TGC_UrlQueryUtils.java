@@ -10,7 +10,7 @@ public class TGC_UrlQueryUtils {
 
     final private static TGC_Log d = TGC_Log.of(TGC_UrlQueryUtils.class);
 
-    public static String sliceQuery(CharSequence url) {
+    public static String sliceQuery(TGS_Url url) {
         var urlStr = url.toString();
         return urlStr.contains("?") ? urlStr.substring(urlStr.indexOf("?") + 1) : "";
     }
@@ -42,23 +42,23 @@ public class TGC_UrlQueryUtils {
 //            new TGS_Pack2(" ", "%20")
 //    );
 
-    public static Boolean getParameterValue(CharSequence url, CharSequence paramName, Boolean defaultValue) {
+    public static Boolean getParameterValue(TGS_Url url, CharSequence paramName, Boolean defaultValue) {
         var strValue = getParameterValue(url, paramName.toString(), String.valueOf(defaultValue));
         return TGS_CastUtils.toBoolean(strValue, defaultValue);
     }
 
-    public static Integer getParameterValue(CharSequence url, CharSequence paramName, Integer defaultValue) {
+    public static Integer getParameterValue(TGS_Url url, CharSequence paramName, Integer defaultValue) {
         var strValue = getParameterValue(url, paramName.toString(), String.valueOf(defaultValue));
         return TGS_CastUtils.toInteger(strValue, defaultValue);
     }
 
-    public static Long getParameterValue(CharSequence url, CharSequence paramName, Long defaultValue) {
+    public static Long getParameterValue(TGS_Url url, CharSequence paramName, Long defaultValue) {
         var strValue = getParameterValue(url, paramName, String.valueOf(defaultValue));
         var lngValue = TGS_CastUtils.toLong(strValue);
         return lngValue == null ? defaultValue : lngValue;
     }
 
-    public static String getParameterValue(CharSequence url, CharSequence paramName, CharSequence defaultValue) {
+    public static String getParameterValue(TGS_Url url, CharSequence paramName, CharSequence defaultValue) {
         var query = sliceQuery(url);
         d.ci("getParameters", "query", query);
         for (var pair : query.split("&")) {
@@ -81,7 +81,7 @@ public class TGC_UrlQueryUtils {
         return defaultValue == null ? null : defaultValue.toString();
     }
 
-    public static List<TGS_Pack2<String, String>> getParameters(CharSequence url) {
+    public static List<TGS_Pack2<String, String>> getParameters(TGS_Url url) {
         var query = sliceQuery(url);
         d.ci("getParameters", "query", query);
         List<TGS_Pack2<String, String>> parameters = TGS_ListUtils.of();

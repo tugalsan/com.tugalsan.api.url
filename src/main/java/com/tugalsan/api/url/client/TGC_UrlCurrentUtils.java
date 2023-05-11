@@ -27,7 +27,7 @@ public class TGC_UrlCurrentUtils {
         return TGC_UrlUtils.getAppName(getUrl());
     }
 
-    public static String getUrl() {
-        return Document.get().getURL();//Window.Location.getHref();
+    public static TGS_Url getUrl() {
+        return TGS_Url.of(Document.get().getURL());//Window.Location.getHref();
     }
 }

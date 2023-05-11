@@ -3,6 +3,7 @@ package com.tugalsan.api.url.client.parser;
 import com.google.gwt.user.client.rpc.*;
 import com.tugalsan.api.cast.client.*;
 import com.tugalsan.api.string.client.*;
+import com.tugalsan.api.url.client.TGS_Url;
 
 public class TGS_UrlParserHost implements IsSerializable {
 
@@ -10,7 +11,7 @@ public class TGS_UrlParserHost implements IsSerializable {
 
     }
 
-    public TGS_UrlParserHost(TGS_UrlParserProtocol protocol, CharSequence url) {
+    public TGS_UrlParserHost(TGS_UrlParserProtocol protocol, TGS_Url url) {
         this.protocol = protocol;
         var urls = url.toString();
         var idxHostDomainStart = urls.indexOf("//");

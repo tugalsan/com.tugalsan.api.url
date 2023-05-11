@@ -2,6 +2,7 @@ package com.tugalsan.api.url.client.builder;
 
 import com.tugalsan.api.random.client.*;
 import com.tugalsan.api.string.client.*;
+import com.tugalsan.api.url.client.TGS_Url;
 
 public class TGS_UrlBuilderParameter {
 
@@ -21,6 +22,10 @@ public class TGS_UrlBuilderParameter {
         this.paramValue = paramValue;
     }
     private TGS_UrlBuilderFileOrServlet fileOrServlet;
+
+    public TGS_Url toUrl() {
+        return TGS_Url.of(toString());
+    }
 
     public String toString() {
         if (fileOrServlet != null) {

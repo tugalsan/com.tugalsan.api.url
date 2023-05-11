@@ -9,11 +9,11 @@ import com.tugalsan.api.url.client.parser.*;
 
 public class TGS_UrlUtils {
 
-    public static boolean isHackedUrl(CharSequence string) {
-        if (string == null) {
+    public static boolean isHackedUrl(TGS_Url url) {
+        if (url == null) {
             return false;
         }
-        var str = string.toString();
+        var str = url.toString();
         if (str.isEmpty()) {
             return false;
         }
@@ -24,19 +24,19 @@ public class TGS_UrlUtils {
         return "file:///".concat(networkFile.toString());
     }
 
-    public static String constructURL(CharSequence urlWithoutQuery, List<TGS_Pack2<String, String>> parametersSafe) {
-        var sb = new StringBuilder(urlWithoutQuery);
+    public static String constructURL(TGS_Url urlWithoutQuery, List<TGS_Pack2<String, String>> parametersSafe) {
+        var sb = new StringBuilder(urlWithoutQuery.toString());
         sb.append("?");
         parametersSafe.stream().forEachOrdered(pair -> sb.append(TGS_StringUtils.concat(pair.value0, "=", pair.value1, "&")));
         return sb.substring(0, sb.length() - 1);
     }
 
-    public static boolean isValidUrl(CharSequence link) {
-        var linkStr = link.toString();
-        return (linkStr.startsWith("https://") || linkStr.startsWith("http://") || linkStr.startsWith("file://") || linkStr.startsWith("url://"));
+    public static boolean isValidUrl(TGS_Url url) {
+        var urls = url.toString();
+        return (urls.startsWith("https://") || urls.startsWith("http://") || urls.startsWith("file://") || urls.startsWith("url://"));
     }
 
-    public static boolean isSecure(CharSequence url) {
+    public static boolean isSecure(TGS_Url url) {
         var urlStr = url.toString();
         return urlStr.startsWith("https://") || urlStr.startsWith("ftps://");
     }

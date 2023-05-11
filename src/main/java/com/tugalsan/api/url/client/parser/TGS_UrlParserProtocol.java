@@ -1,6 +1,7 @@
 package com.tugalsan.api.url.client.parser;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
+import com.tugalsan.api.url.client.TGS_Url;
 import java.util.Objects;
 
 public class TGS_UrlParserProtocol implements IsSerializable {
@@ -9,7 +10,7 @@ public class TGS_UrlParserProtocol implements IsSerializable {
         value = "";
     }
 
-    public TGS_UrlParserProtocol(CharSequence url) {
+    public TGS_UrlParserProtocol(TGS_Url url) {
         var urls = url.toString();
         if (urls.startsWith("http://")) {
             this.value = "http://";

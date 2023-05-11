@@ -4,7 +4,7 @@ import com.tugalsan.api.unsafe.client.*;
 
 public class TGC_UrlUtils {
 
-    public static String parseIPAndPort(CharSequence url) {
+    public static String parseIPAndPort(TGS_Url url) {
         return TGS_UnSafe.call(() -> {
             var urlStr = url.toString();
             var ss = TGS_UrlUtils.isSecure(url) ? "https://" : "http://";
@@ -37,22 +37,22 @@ public class TGC_UrlUtils {
         }, e -> null);
     }
 
-    public static String getAppName(CharSequence url) {
-        var appFolder = getUrlAppFolder(url);
+    public static String getAppName(TGS_Url url) {
+        var appFolder = getUrlAppFolder(url).toString();
         var appFolderCropped = appFolder.substring(0, appFolder.length() - 1);
         var idx = appFolderCropped.lastIndexOf('/');
         return appFolderCropped.substring(idx + 1);
     }
 
-    public static String getUrlAppFolder(CharSequence url) {
-        var urlWQ = TGS_UrlQueryUtils.getUrlWithoutQuery(url);
+    public static TGS_Url getUrlAppFolder(TGS_Url url) {
+        var urlWQ = TGS_UrlQueryUtils.getUrlWithoutQuery(url).toString();
         var idx = urlWQ.lastIndexOf('/');
-        return urlWQ.substring(0, idx + 1);
+        return TGS_Url.of(urlWQ.substring(0, idx + 1));
     }
 
-    public static String getUrlWebappsFolder(CharSequence url) {
-        var urlWithoutQueryStr = TGS_UrlQueryUtils.getUrlWithoutQuery(url);
+    public static TGS_Url getUrlWebappsFolder(TGS_Url url) {
+        var urlWithoutQueryStr = TGS_UrlQueryUtils.getUrlWithoutQuery(url).toString();
         var idx = urlWithoutQueryStr.indexOf("/", "https://".length());
-        return idx == -1 ? urlWithoutQueryStr + "/" : urlWithoutQueryStr.substring(0, idx + 1);
+        return TGS_Url.of(idx == -1 ? urlWithoutQueryStr + "/" : urlWithoutQueryStr.substring(0, idx + 1));
     }
 }

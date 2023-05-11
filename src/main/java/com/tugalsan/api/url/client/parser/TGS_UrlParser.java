@@ -8,16 +8,12 @@ public class TGS_UrlParser implements IsSerializable {
     public TGS_UrlParser() {//DTO
     }
 
-    public static TGS_UrlParser of(CharSequence url) {
+    public static TGS_UrlParser of(TGS_Url url) {
         return new TGS_UrlParser(url);
     }
 
-    public static TGS_UrlParser of(TGS_Url url) {
-        return of(url.url);
-    }
-
     //https://localhost:8443/res-common/
-    public TGS_UrlParser(CharSequence url) {
+    private TGS_UrlParser(TGS_Url url) {
         protocol = new TGS_UrlParserProtocol(url);
         host = new TGS_UrlParserHost(protocol, url);
         path = new TGS_UrlParserPath(protocol, host, url);
@@ -35,11 +31,12 @@ public class TGS_UrlParser implements IsSerializable {
         return anchor.toString_url();
     }
 
-    public TGS_UrlParser cloneIt() {
-        return new TGS_UrlParser(toString());
-    }
-
     public TGS_Url toUrl() {
         return TGS_Url.of(toString());
     }
+
+    public TGS_UrlParser cloneIt() {
+        return new TGS_UrlParser(toUrl());
+    }
+
 }

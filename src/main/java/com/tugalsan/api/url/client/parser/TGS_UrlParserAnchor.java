@@ -2,6 +2,7 @@ package com.tugalsan.api.url.client.parser;
 
 import com.google.gwt.user.client.rpc.*;
 import com.tugalsan.api.string.client.*;
+import com.tugalsan.api.url.client.TGS_Url;
 
 public class TGS_UrlParserAnchor implements IsSerializable {
 
@@ -14,7 +15,7 @@ public class TGS_UrlParserAnchor implements IsSerializable {
     private TGS_UrlParserQuary quary;
 
     public TGS_UrlParserAnchor(TGS_UrlParserProtocol protocol, TGS_UrlParserHost host,
-            TGS_UrlParserPath path, TGS_UrlParserQuary quary, CharSequence url) {
+            TGS_UrlParserPath path, TGS_UrlParserQuary quary, TGS_Url url) {
         this.protocol = protocol;
         this.host = host;
         this.path = path;

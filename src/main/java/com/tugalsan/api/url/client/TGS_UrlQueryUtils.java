@@ -5,20 +5,20 @@ import com.tugalsan.api.string.client.*;
 
 public class TGS_UrlQueryUtils {
 
-    public static String getUrlWithoutQuery(CharSequence url) {
+    public static TGS_Url getUrlWithoutQuery(TGS_Url url) {
         var urlStr = url.toString();
         urlStr = urlStr.contains("?") ? urlStr.substring(0, urlStr.indexOf("?")) : urlStr;
-        return urlStr.contains("#") ? urlStr.substring(0, urlStr.indexOf("#")) : urlStr;
+        return TGS_Url.of(urlStr.contains("#") ? urlStr.substring(0, urlStr.indexOf("#")) : urlStr);
     }
 
     @Deprecated //not good practice, which param?
-    public static String removeLastParam(CharSequence url) {
+    public static TGS_Url removeLastParam(TGS_Url url) {
         var urlStr = url.toString();
         var idx = urlStr.lastIndexOf("&");
         if (idx != -1) {
             urlStr = urlStr.substring(0, idx);
         }
-        return urlStr;
+        return TGS_Url.of(urlStr);
     }
 
     //BASE64 A–Z, a–z, 0–9, +, / and =
