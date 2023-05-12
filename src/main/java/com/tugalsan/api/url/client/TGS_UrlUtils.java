@@ -14,7 +14,7 @@ public class TGS_UrlUtils {
             return false;
         }
         var str = url.toString();
-        if (str.isEmpty()) {
+        if (TGS_StringUtils.isNullOrEmpty(str)) {
             return false;
         }
         return str.contains("../") || str.contains("..\\") || str.startsWith("/") || str.startsWith("\\");

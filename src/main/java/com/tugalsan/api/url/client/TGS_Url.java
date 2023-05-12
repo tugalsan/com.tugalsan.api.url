@@ -28,6 +28,6 @@ public class TGS_Url implements IsSerializable {
 
     @Override
     public String toString() {
-        return url.toString();
+        return url == null ? null : url.toString();
     }
 }
