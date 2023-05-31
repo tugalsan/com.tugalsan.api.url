@@ -3,7 +3,7 @@ package com.tugalsan.api.url.client;
 import com.tugalsan.api.cast.client.*;
 import com.tugalsan.api.list.client.*;
 import com.tugalsan.api.log.client.*;
-import com.tugalsan.api.pack.client.*;
+import com.tugalsan.api.tuple.client.*;
 import java.util.*;
 
 public class TGC_UrlQueryUtils {
@@ -27,19 +27,19 @@ public class TGC_UrlQueryUtils {
 //        }
 //        return queryStr;
 //    }
-//    final private static List<TGS_Pack2<String, String>> toSafeQuery_pack = TGS_ListUtils.of(
-//            new TGS_Pack2("ş", "%C5%9F"),
-//            new TGS_Pack2("Ş", "%C5%9E"),
-//            new TGS_Pack2("ü", "%C3%BC"),
-//            new TGS_Pack2("Ü", "%C3%9C"),
-//            new TGS_Pack2("ç", "%C3%87"),
-//            new TGS_Pack2("ğ", "%C4%9F"),
-//            new TGS_Pack2("Ğ", "%C4%9E"),
-//            new TGS_Pack2("ı", "%C4%B1"),
-//            new TGS_Pack2("İ", "%C4%B0"),
-//            new TGS_Pack2(":", "%3A"),
-//            new TGS_Pack2("/", "%2F"),
-//            new TGS_Pack2(" ", "%20")
+//    final private static List<TGS_Tuple2<String, String>> toSafeQuery_pack = TGS_ListUtils.of(
+//            new TGS_Tuple2("ş", "%C5%9F"),
+//            new TGS_Tuple2("Ş", "%C5%9E"),
+//            new TGS_Tuple2("ü", "%C3%BC"),
+//            new TGS_Tuple2("Ü", "%C3%9C"),
+//            new TGS_Tuple2("ç", "%C3%87"),
+//            new TGS_Tuple2("ğ", "%C4%9F"),
+//            new TGS_Tuple2("Ğ", "%C4%9E"),
+//            new TGS_Tuple2("ı", "%C4%B1"),
+//            new TGS_Tuple2("İ", "%C4%B0"),
+//            new TGS_Tuple2(":", "%3A"),
+//            new TGS_Tuple2("/", "%2F"),
+//            new TGS_Tuple2(" ", "%20")
 //    );
 
     public static Boolean getParameterValue(TGS_Url url, CharSequence paramName, Boolean defaultValue) {
@@ -81,10 +81,10 @@ public class TGC_UrlQueryUtils {
         return defaultValue == null ? null : defaultValue.toString();
     }
 
-    public static List<TGS_Pack2<String, String>> getParameters(TGS_Url url) {
+    public static List<TGS_Tuple2<String, String>> getParameters(TGS_Url url) {
         var query = sliceQuery(url);
         d.ci("getParameters", "query", query);
-        List<TGS_Pack2<String, String>> parameters = TGS_ListUtils.of();
+        List<TGS_Tuple2<String, String>> parameters = TGS_ListUtils.of();
         Arrays.stream(query.split("&")).forEachOrdered(pair -> {
             d.ci("getParameters", "pair", pair);
             var pairParsed = pair.split("=");
@@ -93,7 +93,7 @@ public class TGC_UrlQueryUtils {
                 return;
             }
             d.ci("getParameters", "pairParsed", pairParsed[0], pairParsed[1]);
-            parameters.add(new TGS_Pack2(pairParsed[0], pairParsed[1]));
+            parameters.add(new TGS_Tuple2(pairParsed[0], pairParsed[1]));
         });
         return parameters;
     }

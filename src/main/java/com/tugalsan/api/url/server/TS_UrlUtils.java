@@ -6,7 +6,7 @@ import java.nio.file.*;
 import javax.servlet.http.*;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
-import com.tugalsan.api.pack.client.*;
+import com.tugalsan.api.tuple.client.*;
 import com.tugalsan.api.unsafe.client.*;
 
 public class TS_UrlUtils {
@@ -92,7 +92,7 @@ public class TS_UrlUtils {
         return TGS_UnSafe.call(() -> TGS_Url.of(file.toUri().toURL().toExternalForm()), exception -> null);
     }
 
-    public static TGS_Pack2<Path, Exception> toPathOrError(TGS_Url url) {
+    public static TGS_Tuple2<Path, Exception> toPathOrError(TGS_Url url) {
         return TS_PathUtils.toPathOrError(url.toString());
     }
 
