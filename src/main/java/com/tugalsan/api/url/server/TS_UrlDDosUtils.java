@@ -36,6 +36,7 @@ public class TS_UrlDDosUtils {
             System.out.println("getResponseCode:" + con.getResponseCode());
             con.getInputStream();
         } catch (Exception e) {
+            TGS_UnSafe.throwIfInterruptedException(e);
             d.ce("attackOnce", e.getMessage());
         } finally {
             if (con != null) {

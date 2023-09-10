@@ -50,7 +50,7 @@ public class TS_UrlUtils {
             con.setRequestMethod("HEAD");
             var responseCode = con.getResponseCode();
             return (200 <= responseCode && responseCode <= 399);
-        } catch (Exception e) {
+        } catch (IOException e) {
             return false;//I KNOW
         } finally {
             if (con != null) {
@@ -71,7 +71,7 @@ public class TS_UrlUtils {
             var l = conn.getContentLengthLong();
             conn.disconnect();
             return l;
-        } catch (Exception e) {
+        } catch (IOException e) {
             return null;
         } finally {
             if (conn != null) {
