@@ -1,7 +1,6 @@
 package com.tugalsan.api.url.client.parser;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
-import com.tugalsan.api.charset.server.TS_CharSetPrintableUtils;
 import com.tugalsan.api.url.client.*;
 
 public class TGS_UrlParser implements IsSerializable {

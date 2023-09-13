@@ -2,7 +2,6 @@ package com.tugalsan.api.url.client;
 
 //import com.google.gwt.http.client.URL;
 //import com.google.gwt.http.client.UrlBuilder;
-import com.tugalsan.api.charset.server.TS_CharSetPrintableUtils;
 import java.util.*;
 import com.tugalsan.api.tuple.client.*;
 import com.tugalsan.api.string.client.*;
@@ -19,18 +18,6 @@ public class TGS_UrlUtils {
             return false;
         }
         return str.contains("../") || str.contains("..\\") || str.startsWith("/") || str.startsWith("\\");
-    }
-
-    public static boolean isASCIIVisible(TGS_Url url) {
-        return TS_CharSetPrintableUtils.isASCIIVisible(url.url);
-    }
-
-    public static boolean isPrintableChar(char c) {
-        Character.UnicodeBlock block = Character.UnicodeBlock.of(c);
-        return (!Character.isISOControl(c))
-                && c != KeyEvent.CHAR_UNDEFINED
-                && block != null
-                && block != Character.UnicodeBlock.SPECIALS;
     }
 
     public static String convertFileLoc2HttpLoc(CharSequence networkFile) {
