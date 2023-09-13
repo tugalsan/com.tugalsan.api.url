@@ -1,7 +1,7 @@
 package com.tugalsan.api.url.client.parser;
 
 import com.google.gwt.user.client.rpc.*;
-import com.tugalsan.api.charset.client.TGS_CharSetCheck;
+import com.tugalsan.api.charset.server.TS_CharSetPrintableUtils;
 import com.tugalsan.api.list.client.*;
 import com.tugalsan.api.string.client.*;
 import com.tugalsan.api.url.client.TGS_Url;
