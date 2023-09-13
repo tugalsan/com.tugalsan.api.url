@@ -1,11 +1,11 @@
 package com.tugalsan.api.url.server;
 
+import com.tugalsan.api.crypto.client.TGS_CryptUtils;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.*;
 import java.nio.channels.*;
 import java.nio.file.*;
-import java.util.*;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.log.server.*;
@@ -93,7 +93,7 @@ public class TS_UrlDownloadUtils {
 
     public static String toBase64(TGS_Url sourceURL, Duration timeout) {
         var bytes = toByteArray(sourceURL, timeout);
-        return bytes == null ? null : Base64.getEncoder().encodeToString(bytes);
+        return bytes == null ? null : TGS_CryptUtils.encrypt64(bytes);
     }
 
     public static Path toFile(TGS_Url sourceURL, Path destFile) {
