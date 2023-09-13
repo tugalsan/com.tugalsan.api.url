@@ -93,7 +93,7 @@ public class TS_UrlDownloadUtils {
 
     public static String toBase64(TGS_Url sourceURL, Duration timeout) {
         var bytes = toByteArray(sourceURL, timeout);
-        return bytes == null ? null : TGS_CryptUtils.encrypt64(bytes);
+        return TGS_CryptUtils.encrypt64(bytes);
     }
 
     public static Path toFile(TGS_Url sourceURL, Path destFile) {
