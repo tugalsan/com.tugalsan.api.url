@@ -5,6 +5,7 @@ module com.tugalsan.api.url {
     requires com.tugalsan.api.callable;
     requires com.tugalsan.api.unsafe;
     requires com.tugalsan.api.log;
+    requires com.tugalsan.api.charset;
     requires com.tugalsan.api.network;
     requires com.tugalsan.api.cast;
     requires com.tugalsan.api.stream;

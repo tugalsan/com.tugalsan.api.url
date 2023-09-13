@@ -1,6 +1,7 @@
 package com.tugalsan.api.url.client.parser;
 
 import com.google.gwt.user.client.rpc.*;
+import com.tugalsan.api.charset.client.TGS_CharSetCheck;
 import com.tugalsan.api.list.client.*;
 import com.tugalsan.api.string.client.*;
 import com.tugalsan.api.url.client.TGS_Url;
@@ -34,7 +35,7 @@ public class TGS_UrlParserPath implements IsSerializable {
         var idxHostDomainStart = urls.indexOf("//");
 //        System.out.println("idxHostDomainStart: " + idxHostDomainStart);
         if (idxHostDomainStart == -1) {
-            paths = TGS_ListUtils.of() ;
+            paths = TGS_ListUtils.of();
             return;
         }
         var idxHostPathStart = urls.indexOf("/", idxHostDomainStart + 2);

@@ -2,6 +2,7 @@ package com.tugalsan.api.url.client;
 
 //import com.google.gwt.http.client.URL;
 //import com.google.gwt.http.client.UrlBuilder;
+import com.tugalsan.api.charset.client.TGS_CharSetCheck;
 import java.util.*;
 import com.tugalsan.api.tuple.client.*;
 import com.tugalsan.api.string.client.*;
@@ -18,6 +19,10 @@ public class TGS_UrlUtils {
             return false;
         }
         return str.contains("../") || str.contains("..\\") || str.startsWith("/") || str.startsWith("\\");
+    }
+
+    public boolean isASCIIVisible(TGS_Url url) {
+        return TGS_CharSetCheck.isASCIIVisible(url.url);
     }
 
     public static String convertFileLoc2HttpLoc(CharSequence networkFile) {
