@@ -58,6 +58,10 @@ public class TGS_UrlParserPath implements IsSerializable {
     public List<String> paths;
     public String fileOrServletName;
 
+    public String pathFirst_or_fileOrServletName() {
+        return paths.isEmpty() ? fileOrServletName : paths.getFirst();
+    }
+
     public String toStringPath() {
         return paths.isEmpty() ? "" : (String.join("/", paths) + "/");
     }

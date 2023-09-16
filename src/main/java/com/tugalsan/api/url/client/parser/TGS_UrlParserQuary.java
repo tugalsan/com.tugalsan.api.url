@@ -84,10 +84,10 @@ public class TGS_UrlParserQuary implements IsSerializable {
         return params.isEmpty() ? "" : params.stream().map(pair -> String.valueOf(pair)).collect(Collectors.joining("&", "?", ""));
     }
 
-    public TGS_Url toUrl(){
+    public TGS_Url toUrl() {
         return TGS_Url.of(toString_url());
     }
-    
+
     public String toString_url() {
         var pr = protocol.toString();
         var ho = host.toString();
