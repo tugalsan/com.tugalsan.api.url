@@ -32,13 +32,13 @@ public class TGS_UrlParserPath implements IsSerializable {
         }
 
         var idxHostDomainStart = urls.indexOf("//");
-    //    System.out.println("idxHostDomainStart: " + idxHostDomainStart);
+        //    System.out.println("idxHostDomainStart: " + idxHostDomainStart);
         if (idxHostDomainStart == -1) {
             paths = TGS_ListUtils.of();
             return;
         }
         var idxHostPathStart = urls.indexOf("/", idxHostDomainStart + 2);
-  //      System.out.println("idxHostPathStart: " + idxHostPathStart);
+        //      System.out.println("idxHostPathStart: " + idxHostPathStart);
         if (idxHostPathStart == -1) {
             paths = TGS_ListUtils.of();
             return;
@@ -57,7 +57,7 @@ public class TGS_UrlParserPath implements IsSerializable {
             fileOrServletName = fullPath.substring(idxS + 1);
             fullPath = fullPath.substring(0, idxS);
         }
-  //      System.out.println("fileOrServletName: " + fileOrServletName);
+        //      System.out.println("fileOrServletName: " + fileOrServletName);
         paths = TGS_ListUtils.of(fullPath.split("/"));
         if (paths.size() == 1 && paths.get(0).isEmpty()) {
             paths.clear();
@@ -67,7 +67,8 @@ public class TGS_UrlParserPath implements IsSerializable {
     public String fileOrServletName;
 
     public String pathFirst_or_fileOrServletName() {
-        return paths.isEmpty() ? fileOrServletName : paths.getFirst();
+        //return paths.isEmpty() ? fileOrServletName : paths.getFirst();//GWT WONT LIKE U
+        return paths.isEmpty() ? fileOrServletName : paths.get(0);
     }
 
     public String toStringPath() {
