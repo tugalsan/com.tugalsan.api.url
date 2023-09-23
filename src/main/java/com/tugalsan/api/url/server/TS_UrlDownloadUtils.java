@@ -14,7 +14,7 @@ import java.time.Duration;
 
 public class TS_UrlDownloadUtils {
 
-    final private static TS_Log d = TS_Log.of(TS_UrlDownloadUtils.class);
+    final public static TS_Log d = TS_Log.of(false, TS_UrlDownloadUtils.class);
 
     public static boolean isReacable(TGS_Url sourceURL) {
         return isReacable(sourceURL, 5);
@@ -141,20 +141,27 @@ public class TS_UrlDownloadUtils {
     public static byte[] toByteArray(TGS_Url sourceURL, Duration timeout) {
         return TGS_UnSafe.call(() -> {
             var url = new URL(sourceURL.url.toString());
+            d.ci("toByteArray", "url", url);
             var con = url.openConnection();
+            d.ci("toByteArray", "con", "open");
             if (timeout != null) {
                 var ms = (int) timeout.toMillis();
+                d.ci("toByteArray", "timeout ms", ms);
                 con.setConnectTimeout(ms);
                 con.setReadTimeout(ms);
             }
+            d.ci("toByteArray", "read byte", "started");
             try (var baos = new ByteArrayOutputStream(); var is = con.getInputStream();) {
                 var byteChunk = new byte[8 * 1024];
                 int n;
                 while ((n = is.read(byteChunk)) > 0) {
+                    d.ci("toByteArray", "read byte", "reading...");
                     baos.write(byteChunk, 0, n);
                 }
                 baos.flush();
-                return baos.toByteArray();
+                var byteArray = baos.toByteArray();
+                d.ci("toByteArray", "read byte", "ended", byteArray.length);
+                return byteArray;
             }
         }, e -> null);
     }
