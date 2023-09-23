@@ -84,6 +84,9 @@ public class TS_UrlDownloadUtils {
 
     public static String toText(TGS_Url sourceURL, Duration timeout) {
         var bytes = toByteArray(sourceURL, timeout);
+        if (d.infoEnable && bytes == null){
+            d.ci("toText", "bytes is null");
+        }
         return bytes == null ? null : new String(bytes, StandardCharsets.UTF_8);
     }
 
@@ -160,9 +163,12 @@ public class TS_UrlDownloadUtils {
                 }
                 baos.flush();
                 var byteArray = baos.toByteArray();
-                d.ci("toByteArray", "read byte", "ended", byteArray.length);
+                d.ci("toByteArray", "read byte", "ended", byteArray.length, new String(byteArray, StandardCharsets.UTF_8));
                 return byteArray;
             }
-        }, e -> null);
+        }, e -> {
+            d.ct("toByteArray", e);
+            return null;
+        });
     }
 }
