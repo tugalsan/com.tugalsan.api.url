@@ -84,7 +84,7 @@ public class TS_UrlDownloadUtils {
 
     public static String toText(TGS_Url sourceURL, Duration timeout) {
         var bytes = toByteArray(sourceURL, timeout);
-        if (d.infoEnable && bytes == null){
+        if (d.infoEnable && bytes == null) {
             d.ci("toText", "bytes is null");
         }
         return bytes == null ? null : new String(bytes, StandardCharsets.UTF_8);
@@ -167,7 +167,9 @@ public class TS_UrlDownloadUtils {
                 return byteArray;
             }
         }, e -> {
-            d.ct("toByteArray", e);
+            if (d.infoEnable) {
+                d.ct("toByteArray", e);
+            }
             return null;
         });
     }
