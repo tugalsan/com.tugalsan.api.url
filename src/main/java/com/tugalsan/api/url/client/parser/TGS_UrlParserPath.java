@@ -1,12 +1,12 @@
 package com.tugalsan.api.url.client.parser;
 
-import com.google.gwt.user.client.rpc.*;
 import com.tugalsan.api.list.client.*;
 import com.tugalsan.api.string.client.*;
 import com.tugalsan.api.url.client.TGS_Url;
+import java.io.Serializable;
 import java.util.*;
 
-public class TGS_UrlParserPath implements IsSerializable {
+public class TGS_UrlParserPath implements Serializable {
 
     public TGS_UrlParserPath() {//DTO
     }
