@@ -1,9 +1,9 @@
 package com.tugalsan.api.url.client;
 
-import com.google.gwt.user.client.rpc.*;
 import com.tugalsan.api.url.client.builder.*;
+import java.io.Serializable;
 
-public class TGS_Url implements IsSerializable {
+public class TGS_Url implements Serializable {
 
     public TGS_Url(CharSequence url) {
         this.url = url;
