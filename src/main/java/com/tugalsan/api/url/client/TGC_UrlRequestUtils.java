@@ -13,7 +13,7 @@ public class TGC_UrlRequestUtils {
         return 200;
     }
 
-    public static void get(TGS_Url url, TGS_RunnableType1<Response> onResponse) {
+    public static void get(TGS_Url url, TGS_RunnableType1<Response> onResponse) { 
         TGS_UnSafe.run(() -> {
             var builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url.toString()));
             builder.sendRequest(null, new RequestCallback() {
