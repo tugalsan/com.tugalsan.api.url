@@ -11,20 +11,20 @@ public class TS_UrlServletRequestUtils {
 
     final private static TS_Log d = TS_Log.of(TS_UrlServletRequestUtils.class);
 
-    public static String getParameterValueFrom64(HttpServletRequest rq, CharSequence paramName) {
-        var val64Safe = getParameterValue(rq, paramName, false);
-        d.ci("getParameterValueFrom64", paramName, "val64Safe", val64Safe);
+    public static String getParameterValueFrom64(HttpServletRequest rq, CharSequence paramNameAsIs) {
+        var val64Safe = getParameterValue(rq, paramNameAsIs, false);
+        d.ci("getParameterValueFrom64", paramNameAsIs, "val64Safe", val64Safe);
         var valReadable = TGS_UrlQueryUtils.param64UrlSafe_2_readable(val64Safe);
-        d.ci("getParameterValueFrom64", paramName, "valReadable", valReadable);
+        d.ci("getParameterValueFrom64", paramNameAsIs, "valReadable", valReadable);
         return valReadable;
     }
 
     @Deprecated //NOT CHARACTER SAFE, USE getParameterValueFrom64 instead!
-    public static String getParameterValue(HttpServletRequest rq, CharSequence paramName, boolean readable) {
-        var paramNameStr = paramName.toString();
+    public static String getParameterValue(HttpServletRequest rq, CharSequence paramNameAsIs, boolean dechiperVal2Readable) {
+        var paramNameStr = paramNameAsIs.toString();
         var paramVal = rq.getParameter(paramNameStr);
-        if (!readable) {
-            return paramVal;
+        if (!dechiperVal2Readable) {
+            return TGS_StringUtils.toNullIfEmpty(paramVal);
         }
         var paramValReadable = TS_UrlQueryUtils.toParamValueReadable(paramVal);
 //        d.ce("getParameterValue", "paramNameStr/paramVal/paramValReadable", paramNameStr, paramVal, paramValReadable);
