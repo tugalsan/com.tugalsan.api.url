@@ -22,7 +22,7 @@ public class TS_UrlDownloadUtils {
 
     public static boolean isReacable(TGS_Url sourceURL, int timeout) {
         var url = sourceURL.url.toString().replaceFirst("^https", "http");
-        var urll = TGS_UnSafe.call(() -> new URL(url), e -> null);
+        var urll = TGS_UnSafe.call(() -> URI.create(url).toURL(), e -> null);
         if (urll == null) {
             return false;
         }
@@ -109,7 +109,7 @@ public class TS_UrlDownloadUtils {
                 d.ce("toFile", "cannot delete destFile file, skipped!", sourceURL, destFile);
                 return null;
             }
-            var url = new URL(sourceURL.url.toString());
+            var url = URI.create(sourceURL.url.toString()).toURL();
             if (timeout != null) {
                 var con = url.openConnection();
                 var ms = (int) timeout.toMillis();
@@ -143,7 +143,7 @@ public class TS_UrlDownloadUtils {
 
     public static byte[] toByteArray(TGS_Url sourceURL, Duration timeout) {
         return TGS_UnSafe.call(() -> {
-            var url = new URL(sourceURL.url.toString());
+            var url = URI.create(sourceURL.url.toString()).toURL();
             d.ci("toByteArray", "url", url);
             var con = url.openConnection();
             d.ci("toByteArray", "con", "open");

@@ -36,7 +36,7 @@ public class TS_UrlUtils {
     }
 
     public boolean isReachable(TGS_Url urlo, Integer optionalTimeOut) {
-        var url = TGS_UnSafe.call(() -> new URL(urlo.toString()), e -> null);
+        var url = TGS_UnSafe.call(() -> URI.create(urlo.toString()).toURL(), e -> null);
         if (url == null) {
             return false;
         }
@@ -60,7 +60,7 @@ public class TS_UrlUtils {
     }
 
     public Long getLengthInBytes(TGS_Url urlo) {
-        var url = TGS_UnSafe.call(() -> new URL(urlo.toString()), e -> null);
+        var url = TGS_UnSafe.call(() -> URI.create(urlo.toString()).toURL(), e -> null);
         if (url == null) {
             return null;
         }
@@ -81,11 +81,11 @@ public class TS_UrlUtils {
     }
 
     public InputStream newInputStream(TGS_Url url) {
-        return TGS_UnSafe.call(() -> new URL(url.toString()).openConnection().getInputStream());
+        return TGS_UnSafe.call(() -> URI.create(url.toString()).toURL().openConnection().getInputStream());
     }
 
     public OutputStream newOutputStream(TGS_Url url) {
-        return TGS_UnSafe.call(() -> new URL(url.toString()).openConnection().getOutputStream());
+        return TGS_UnSafe.call(() -> URI.create(url.toString()).toURL().openConnection().getOutputStream());
     }
 
     public static TGS_Url toUrl(Path file) {
@@ -97,6 +97,9 @@ public class TS_UrlUtils {
     }
 
     public static boolean isUrl(CharSequence str) {
-        return TGS_UnSafe.call(() -> new URL(str.toString()) != null, e -> false);
+        return TGS_UnSafe.call(() -> {
+            URI.create(str.toString()).toURL();
+            return true;
+        }, e -> false);
     }
 }

@@ -1,12 +1,10 @@
 package com.tugalsan.api.url.server;
 
-import java.util.List;
-
 @Deprecated//TODO HTTP JDK12  HOW TO DOWNLAOD: https://www.tutorialspoint.com/java11/java11_standard_httpclient.htm
 public class TS_UrlDownloadBean<T> {
-    T value;
-    List<String> headers;
-    int statusCode;
+//    T value;
+//    List<String> headers;
+//    int statusCode;
     
 //    public static TS_UrlDownloadBean<String> ofStr(){
 //        TS_UrlDownloadBean<String> r = new TS_UrlDownloadBean();
