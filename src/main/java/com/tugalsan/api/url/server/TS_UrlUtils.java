@@ -6,12 +6,30 @@ import java.nio.file.*;
 import javax.servlet.http.*;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
+import com.tugalsan.api.log.server.TS_Log;
+import com.tugalsan.api.string.client.TGS_StringUtils;
 import com.tugalsan.api.tuple.client.*;
 import com.tugalsan.api.unsafe.client.*;
 
 public class TS_UrlUtils {
 
+    final private static TS_Log d = TS_Log.of(TS_UrlUtils.class);
+
+    public static String mime(TGS_Url img) {
+        var typ = URLConnection.getFileNameMap().getContentTypeFor(TGS_UrlUtils.getFileNameFull(img));
+        if (TGS_StringUtils.isPresent(typ) || typ.length() < 5) {
+            return typ;
+        }
+        return TGS_UnSafe.call(() -> {
+            var url = new URI(img.url.toString()).toURL();
+            return url.openConnection().getContentType();
+        }, e -> {
+            d.ct("mime(TGS_Url img)", e);
+            return typ;
+        });
+    }
 //    final private static TS_Log d = TS_Log.of(TS_UrlUtils.class);
+
     public static TGS_Url toUrl(HttpServletRequest rq) {
         var protocol = rq.getScheme();             // http
         var hostName = rq.getServerName();     // hostname.com
