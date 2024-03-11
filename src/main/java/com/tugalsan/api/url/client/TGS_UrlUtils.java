@@ -53,15 +53,33 @@ public class TGS_UrlUtils {
         return parser.path.paths.get(0);
     }
 
-    public static String getFileNameType(TGS_Url url) {
-        var fullName = url.url.toString();
-        var i = fullName.lastIndexOf('.');
+    public static String getFileNameLabel(TGS_Url url) {
+        var fileNameFull = getFileNameFull(url);
+        var i = fileNameFull.lastIndexOf('.');
+        return fileNameFull.substring(0, i);
+    }
+
+    public static String getFileNameFull(TGS_Url url) {
+        var fullUrl = url.url.toString();
+        var i = fullUrl.lastIndexOf('/');
         if (i == 0) {
-            return fullName.substring(i + 1);
+            return fullUrl.substring(i + 1);
         }
         if (i == -1) {
             return "";
         }
-        return fullName.substring(i + 1);
+        return fullUrl.substring(i + 1);
+    }
+
+    public static String getFileNameType(TGS_Url url) {
+        var fullUrl = url.url.toString();
+        var i = fullUrl.lastIndexOf('.');
+        if (i == 0) {
+            return fullUrl.substring(i + 1);
+        }
+        if (i == -1) {
+            return "";
+        }
+        return fullUrl.substring(i + 1);
     }
 }
