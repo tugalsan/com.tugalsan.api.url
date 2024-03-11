@@ -22,7 +22,7 @@ public class TS_UrlUtils {
         }
         return TGS_UnSafe.call(() -> {
             var url = new URI(img.url.toString()).toURL();
-            return url.openConnection().getContentType();
+            return url.openConnection().getContentType().replace(";charset=UTF-8", "");
         }, e -> {
             d.ct("mime(TGS_Url img)", e);
             return typ;
