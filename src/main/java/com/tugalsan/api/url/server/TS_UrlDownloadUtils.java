@@ -78,9 +78,10 @@ public class TS_UrlDownloadUtils {
 //        System.out.println(response.statusCode());
 //        System.out.println(response.body());
 //    }
-    public static String toText(TGS_Url sourceURL) {
-        return toText(sourceURL, null);
-    }
+//    dont use locks!!!    
+//    public static String toText(TGS_Url sourceURL) {
+//        return toText(sourceURL, null);
+//    }
 
     public static String toText(TGS_Url sourceURL, Duration timeout) {
         var bytes = toByteArray(sourceURL, timeout);
@@ -135,10 +136,6 @@ public class TS_UrlDownloadUtils {
                 return null;
             }
         }, e -> null);
-    }
-
-    public static byte[] toByteArray(TGS_Url sourceURL) {
-        return toByteArray(sourceURL, null);
     }
 
     public static byte[] toByteArray(TGS_Url sourceURL, Duration timeout) {
