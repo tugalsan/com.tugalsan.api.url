@@ -82,7 +82,6 @@ public class TS_UrlDownloadUtils {
 //    public static String toText(TGS_Url sourceURL) {
 //        return toText(sourceURL, null);
 //    }
-
     public static String toText(TGS_Url sourceURL, Duration timeout) {
         var bytes = toByteArray(sourceURL, timeout);
         if (d.infoEnable && bytes == null) {
@@ -145,10 +144,13 @@ public class TS_UrlDownloadUtils {
             var con = url.openConnection();
             d.ci("toByteArray", "con", "open");
             if (timeout != null) {
-                var ms = (int) timeout.toMillis();
-                d.ci("toByteArray", "timeout ms", ms);
-                con.setConnectTimeout(ms);
-                con.setReadTimeout(ms);
+                var ms_long = timeout.toMillis();
+                if (ms_long <= Integer.MAX_VALUE) {
+                    var ms_int = (int) ms_long;
+                    d.ci("toByteArray", "timeout ms", ms_int);
+                    con.setConnectTimeout(ms_int);
+                    con.setReadTimeout(ms_int);
+                }
             }
             d.ci("toByteArray", "read byte", "started");
             try (var baos = new ByteArrayOutputStream(); var is = con.getInputStream();) {
