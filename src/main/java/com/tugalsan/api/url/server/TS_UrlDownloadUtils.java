@@ -137,16 +137,13 @@ public class TS_UrlDownloadUtils {
         }, e -> null);
     }
 
-    @Deprecated //TODO: return null immediately sometimes!!!
-    public static boolean toByteArray_OBEY_TIMEOUT = false;
-
     public static byte[] toByteArray(TGS_Url sourceURL, Duration timeout) {
         return TGS_UnSafe.call(() -> {
             var url = URI.create(sourceURL.url.toString()).toURL();
             d.ci("toByteArray", "url", url);
             var con = url.openConnection();
             d.ci("toByteArray", "con", "open");
-            if (toByteArray_OBEY_TIMEOUT && timeout != null) {
+            if (timeout != null) {
                 var ms_long = timeout.toMillis();
                 if (ms_long <= Integer.MAX_VALUE) {
                     var ms_int = (int) ms_long;
