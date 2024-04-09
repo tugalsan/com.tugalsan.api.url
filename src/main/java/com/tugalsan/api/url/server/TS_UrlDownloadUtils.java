@@ -83,7 +83,7 @@ public class TS_UrlDownloadUtils {
 //    }
     public static TGS_Union<String> toText(TGS_Url sourceURL, Duration timeout) {
         var u_bytes = toByteArray(sourceURL, timeout);
-        if (u_bytes.isError()) {
+        if (u_bytes.isExcuse()) {
             return TGS_Union.ofExcuse(u_bytes.excuse());
         }
         if (d.infoEnable) {
@@ -107,7 +107,7 @@ public class TS_UrlDownloadUtils {
 
     public static TGS_Union<Boolean> toFile(TGS_Url sourceURL, Path destFile, Duration timeout) {
         var u_delete = TS_FileUtils.deleteFileIfExists(destFile, true);
-        if (u_delete.isError()) {
+        if (u_delete.isExcuse()) {
             return TGS_Union.ofExcuse(u_delete.excuse());
         }
         if (!u_delete.value()) {
@@ -130,7 +130,7 @@ public class TS_UrlDownloadUtils {
                     var fileChannel = fileOutputStream.getChannel();
                     fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
                     var u_isEmptyFile = TS_FileUtils.isEmptyFile(destFile);
-                    if (u_isEmptyFile.isError()) {
+                    if (u_isEmptyFile.isExcuse()) {
                         return TGS_Union.ofExcuse(u_isEmptyFile.excuse());
                     }
                     if (!u_isEmptyFile.value()) {
@@ -147,7 +147,7 @@ public class TS_UrlDownloadUtils {
             var fileChannel = fileOutputStream.getChannel();
             fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
             var u_isEmptyFile = TS_FileUtils.isEmptyFile(destFile);
-            if (u_isEmptyFile.isError()) {
+            if (u_isEmptyFile.isExcuse()) {
                 return TGS_Union.ofExcuse(u_isEmptyFile.excuse());
             }
             if (!u_isEmptyFile.value()) {
