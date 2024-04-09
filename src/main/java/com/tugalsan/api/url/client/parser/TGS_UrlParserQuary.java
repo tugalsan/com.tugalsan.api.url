@@ -63,7 +63,7 @@ public class TGS_UrlParserQuary implements Serializable {
         }
         var found = getParameterByName(name);
         if (found != null) {
-            found.valueUrlSafe = valueUrlSafe;
+            found.valueSafe = valueUrlSafe;
             return this;
         }
         params.add(new TGS_UrlParserParamUrlSafe(name, valueUrlSafe));

@@ -8,25 +8,23 @@ import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.string.client.TGS_StringUtils;
-import com.tugalsan.api.tuple.client.*;
-import com.tugalsan.api.unsafe.client.*;
+import com.tugalsan.api.union.client.TGS_Union;
 
 public class TS_UrlUtils {
 
     final private static TS_Log d = TS_Log.of(TS_UrlUtils.class);
 
-    public static String mime(TGS_Url img) {
+    public static TGS_Union<String> mime(TGS_Url img) {
         var typ = URLConnection.getFileNameMap().getContentTypeFor(TGS_UrlUtils.getFileNameFull(img));
         if (TGS_StringUtils.isPresent(typ) && typ.length() < 5) {
-            return typ;
+            return TGS_Union.of(typ);
         }
-        return TGS_UnSafe.call(() -> {
+        try {
             var url = new URI(img.url.toString()).toURL();
-            return url.openConnection().getContentType().replace(";charset=UTF-8", "");
-        }, e -> {
-            d.ct("mime(TGS_Url img)", e);
-            return typ;
-        });
+            return TGS_Union.of(url.openConnection().getContentType().replace(";charset=UTF-8", ""));
+        } catch (IOException | URISyntaxException ex) {
+            return new TGS_Union(typ, ex);
+        }
     }
 //    final private static TS_Log d = TS_Log.of(TS_UrlUtils.class);
 
@@ -53,71 +51,83 @@ public class TS_UrlUtils {
         return TGS_Url.of(url.toString());
     }
 
-    public boolean isReachable(TGS_Url urlo, Integer optionalTimeOut) {
-        var url = TGS_UnSafe.call(() -> URI.create(urlo.toString()).toURL(), e -> null);
-        if (url == null) {
-            return false;
-        }
-        HttpURLConnection con = null;
+    public TGS_Union<Boolean> isReachable(TGS_Url urlo, Integer optionalTimeOut) {
         try {
-            con = (HttpURLConnection) url.openConnection();
-            if (optionalTimeOut != null) {
-                con.setConnectTimeout(optionalTimeOut);
-                con.setReadTimeout(optionalTimeOut);
+            var url = URI.create(urlo.toString()).toURL();
+            HttpURLConnection con = null;
+            try {
+                con = (HttpURLConnection) url.openConnection();
+                if (optionalTimeOut != null) {
+                    con.setConnectTimeout(optionalTimeOut);
+                    con.setReadTimeout(optionalTimeOut);
+                }
+                con.setRequestMethod("HEAD");
+                var responseCode = con.getResponseCode();
+                return TGS_Union.of(200 <= responseCode && responseCode <= 399);
+            } finally {
+                if (con != null) {
+                    con.disconnect();
+                }
             }
-            con.setRequestMethod("HEAD");
-            var responseCode = con.getResponseCode();
-            return (200 <= responseCode && responseCode <= 399);
-        } catch (IOException e) {
-            return false;//I KNOW
-        } finally {
-            if (con != null) {
-                con.disconnect();
-            }
+        } catch (IOException ex) {
+            return TGS_Union.ofExcuse(ex);
         }
     }
 
-    public Long getLengthInBytes(TGS_Url urlo) {
-        var url = TGS_UnSafe.call(() -> URI.create(urlo.toString()).toURL(), e -> null);
-        if (url == null) {
-            return null;
-        }
-        HttpURLConnection conn = null;
+    public TGS_Union< Long> getLengthInBytes(TGS_Url urlo) {
         try {
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("HEAD");
-            var l = conn.getContentLengthLong();
-            conn.disconnect();
-            return l;
-        } catch (IOException e) {
-            return null;
-        } finally {
-            if (conn != null) {
+            var url = URI.create(urlo.toString()).toURL();
+            HttpURLConnection conn = null;
+            try {
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("HEAD");
+                var l = conn.getContentLengthLong();
                 conn.disconnect();
+                return TGS_Union.of(l);
+            } finally {
+                if (conn != null) {
+                    conn.disconnect();
+                }
             }
+        } catch (IOException ex) {
+            return TGS_Union.ofExcuse(ex);
         }
     }
 
-    public InputStream newInputStream(TGS_Url url) {
-        return TGS_UnSafe.call(() -> URI.create(url.toString()).toURL().openConnection().getInputStream());
+    public TGS_Union<InputStream> newInputStream(TGS_Url url) {
+        try {
+            return TGS_Union.of(URI.create(url.toString()).toURL().openConnection().getInputStream());
+        } catch (IOException ex) {
+            return TGS_Union.ofExcuse(ex);
+        }
     }
 
-    public OutputStream newOutputStream(TGS_Url url) {
-        return TGS_UnSafe.call(() -> URI.create(url.toString()).toURL().openConnection().getOutputStream());
+    public TGS_Union<OutputStream> newOutputStream(TGS_Url url) {
+        try {
+            return TGS_Union.of(URI.create(url.toString()).toURL().openConnection().getOutputStream());
+        } catch (IOException ex) {
+            return TGS_Union.ofExcuse(ex);
+        }
     }
 
-    public static TGS_Url toUrl(Path file) {
-        return TGS_UnSafe.call(() -> TGS_Url.of(file.toUri().toURL().toExternalForm()), exception -> null);
+    public static TGS_Union<TGS_Url> toUrl(Path file) {
+        try {
+            return TGS_Union.of(TGS_Url.of(file.toUri().toURL().toExternalForm()));
+        } catch (MalformedURLException ex) {
+            return TGS_Union.ofExcuse(ex);
+        }
     }
 
-    public static TGS_Tuple2<Path, Exception> toPathOrError(TGS_Url url) {
+    public static TGS_Union<Path> toPathOrError(TGS_Url url) {
         return TS_PathUtils.toPathOrError(url.toString());
     }
 
     public static boolean isUrl(CharSequence str) {
-        return TGS_UnSafe.call(() -> {
+        try {
             URI.create(str.toString()).toURL();
             return true;
-        }, e -> false);
+        } catch (MalformedURLException ex) {
+            return false;
+        }
     }
 }

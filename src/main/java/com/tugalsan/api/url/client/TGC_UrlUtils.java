@@ -1,40 +1,32 @@
 package com.tugalsan.api.url.client;
 
-import com.tugalsan.api.unsafe.client.*;
-
 public class TGC_UrlUtils {
 
     public static String parseIPAndPort(TGS_Url url) {
-        return TGS_UnSafe.call(() -> {
-            var urlStr = url.toString();
-            var ss = TGS_UrlUtils.isSecure(url) ? "https://" : "http://";
-            var s = urlStr.indexOf(ss);
-            urlStr = urlStr.substring(s + ss.length());
-            ss = "/";
-            s = urlStr.indexOf(ss);
-            return urlStr.substring(0, s);
-        }, e -> null);
+        var urlStr = url.toString();
+        var ss = TGS_UrlUtils.isSecure(url) ? "https://" : "http://";
+        var s = urlStr.indexOf(ss);
+        urlStr = urlStr.substring(s + ss.length());
+        ss = "/";
+        s = urlStr.indexOf(ss);
+        return urlStr.substring(0, s);
     }
 
     public static String parsePort(CharSequence ipAndPort) {
-        return TGS_UnSafe.call(() -> {
-            var ipAndPortStr = ipAndPort.toString();
-            var ss = ":";
-            var s = ipAndPortStr.indexOf(ss);
-            return ipAndPortStr.substring(s + 1);
-        }, e -> null);
+        var ipAndPortStr = ipAndPort.toString();
+        var ss = ":";
+        var s = ipAndPortStr.indexOf(ss);
+        return ipAndPortStr.substring(s + 1);
     }
 
     public static String parseIp(CharSequence ipAndPort) {
-        return TGS_UnSafe.call(() -> {
-            var ipAndPortStr = ipAndPort.toString();
-            var ss = ":";
-            var s = ipAndPortStr.indexOf(ss);
-            if (s == -1) {
-                return ipAndPortStr;
-            }
-            return ipAndPortStr.substring(0, s);
-        }, e -> null);
+        var ipAndPortStr = ipAndPort.toString();
+        var ss = ":";
+        var s = ipAndPortStr.indexOf(ss);
+        if (s == -1) {
+            return ipAndPortStr;
+        }
+        return ipAndPortStr.substring(0, s);
     }
 
     public static String getAppName(TGS_Url url) {

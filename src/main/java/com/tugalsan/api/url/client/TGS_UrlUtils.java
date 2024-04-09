@@ -3,7 +3,6 @@ package com.tugalsan.api.url.client;
 //import com.google.gwt.http.client.URL;
 //import com.google.gwt.http.client.UrlBuilder;
 import java.util.*;
-import com.tugalsan.api.tuple.client.*;
 import com.tugalsan.api.string.client.*;
 import com.tugalsan.api.url.client.parser.*;
 
@@ -24,10 +23,10 @@ public class TGS_UrlUtils {
         return "file:///".concat(networkFile.toString());
     }
 
-    public static String constructURL(TGS_Url urlWithoutQuery, List<TGS_Tuple2<String, String>> parametersSafe) {
+    public static String constructURL(TGS_Url urlWithoutQuery, List<TGS_UrlParserParamUrlSafe> parametersSafe) {
         var sb = new StringBuilder(urlWithoutQuery.toString());
         sb.append("?");
-        parametersSafe.stream().forEachOrdered(pair -> sb.append(TGS_StringUtils.concat(pair.value0, "=", pair.value1, "&")));
+        parametersSafe.stream().forEachOrdered(pair -> sb.append(TGS_StringUtils.concat(pair.name, "=", pair.valueSafe, "&")));
         return sb.substring(0, sb.length() - 1);
     }
 

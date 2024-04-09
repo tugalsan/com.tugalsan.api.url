@@ -3,7 +3,7 @@ package com.tugalsan.api.url.client;
 import com.tugalsan.api.cast.client.*;
 import com.tugalsan.api.list.client.*;
 import com.tugalsan.api.log.client.*;
-import com.tugalsan.api.tuple.client.*;
+import com.tugalsan.api.url.TGS_UrlParameterSafe;
 import java.util.*;
 
 public class TGC_UrlQueryUtils {
@@ -81,10 +81,10 @@ public class TGC_UrlQueryUtils {
         return defaultValue == null ? null : defaultValue.toString();
     }
 
-    public static List<TGS_Tuple2<String, String>> getParameters(TGS_Url url) {
+    public static List<TGS_UrlParameterSafe> getParameters(TGS_Url url) {
         var query = sliceQuery(url);
         d.ci("getParameters", "query", query);
-        List<TGS_Tuple2<String, String>> parameters = TGS_ListUtils.of();
+        List<TGS_UrlParameterSafe> parameters = TGS_ListUtils.of();
         Arrays.stream(query.split("&")).forEachOrdered(pair -> {
             d.ci("getParameters", "pair", pair);
             var pairParsed = pair.split("=");
@@ -93,7 +93,7 @@ public class TGC_UrlQueryUtils {
                 return;
             }
             d.ci("getParameters", "pairParsed", pairParsed[0], pairParsed[1]);
-            parameters.add(new TGS_Tuple2(pairParsed[0], pairParsed[1]));
+            parameters.add(new TGS_UrlParameterSafe(pairParsed[0], pairParsed[1]));
         });
         return parameters;
     }

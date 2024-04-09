@@ -35,7 +35,7 @@ public class TS_UrlDDosUtils {
             con.setRequestProperty("Content-Length", paramPair);
             System.out.println("getResponseCode:" + con.getResponseCode());
             con.getInputStream();
-        } catch (Exception e) {
+        } catch (?Exception e) {
             TGS_UnSafe.throwIfInterruptedException(e);
             d.ce("attackOnce", e.getMessage());
         } finally {

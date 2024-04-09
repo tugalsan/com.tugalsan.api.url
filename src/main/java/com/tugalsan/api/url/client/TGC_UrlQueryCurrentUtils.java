@@ -5,7 +5,7 @@ import com.google.gwt.user.client.*;
 import com.tugalsan.api.cast.client.*;
 import com.tugalsan.api.list.client.*;
 import com.tugalsan.api.log.client.*;
-import com.tugalsan.api.tuple.client.*;
+import com.tugalsan.api.url.TGS_UrlParameterSafe;
 
 public class TGC_UrlQueryCurrentUtils {
 
@@ -37,16 +37,16 @@ public class TGC_UrlQueryCurrentUtils {
         return value == null || value.isEmpty() ? defaultValue : value;
     }
 
-    public static List<TGS_Tuple2<String, String>> getParameters(CharSequence defaultValue) {
-        List<TGS_Tuple2<String, String>> parameters = TGS_ListUtils.of();
+    public static List<TGS_UrlParameterSafe> getParameters(CharSequence defaultValue) {
+        List<TGS_UrlParameterSafe> parameters = TGS_ListUtils.of();
         var map = Window.Location.getParameterMap();
         map.entrySet().forEach(entry -> {
             var key = entry.getKey();
             var values = entry.getValue();
             if (values.isEmpty() || values.get(0) == null) {
-                parameters.add(new TGS_Tuple2(key, defaultValue.toString()));
+                parameters.add(new TGS_UrlParameterSafe(key, defaultValue.toString()));
             }
-            parameters.add(new TGS_Tuple2(key, values.get(0)));
+            parameters.add(new TGS_UrlParameterSafe(key, values.get(0)));
         });
         return parameters;
     }
