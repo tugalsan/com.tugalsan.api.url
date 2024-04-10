@@ -9,19 +9,19 @@ import java.nio.file.*;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.log.server.*;
-import com.tugalsan.api.union.client.TGS_Union;
 import com.tugalsan.api.union.client.TGS_UnionExcuse;
+import com.tugalsan.api.union.client.TGS_UnionExcuseVoid;
 import java.time.Duration;
 
 public class TS_UrlDownloadUtils {
 
     final public static TS_Log d = TS_Log.of(false, TS_UrlDownloadUtils.class);
 
-    public static TGS_UnionExcuse isReacable(TGS_Url sourceURL) {
+    public static TGS_UnionExcuseVoid isReacable(TGS_Url sourceURL) {
         return isReacable(sourceURL, 5);
     }
 
-    public static TGS_UnionExcuse isReacable(TGS_Url sourceURL, int timeout) {
+    public static TGS_UnionExcuseVoid isReacable(TGS_Url sourceURL, int timeout) {
         try {
             var url = sourceURL.url.toString().replaceFirst("^https", "http");
             var urll = URI.create(url).toURL();
@@ -33,9 +33,9 @@ public class TS_UrlDownloadUtils {
                 con.setRequestMethod("HEAD");
                 var responseCode = con.getResponseCode();
                 if (200 <= responseCode && responseCode <= 399) {
-                    return TGS_UnionExcuse.ofVoid();
+                    return TGS_UnionExcuseVoid.ofVoid();
                 } else {
-                    return TGS_UnionExcuse.ofExcuse(d.className, "isReacable", "response code is %d".formatted(responseCode));
+                    return TGS_UnionExcuseVoid.ofExcuse(d.className, "isReacable", "response code is %d".formatted(responseCode));
                 }
             } finally {
                 if (con != null) {
@@ -43,7 +43,7 @@ public class TS_UrlDownloadUtils {
                 }
             }
         } catch (IOException ex) {
-            return TGS_UnionExcuse.ofExcuse(ex);
+            return TGS_UnionExcuseVoid.ofExcuse(ex);
         }
     }
 
@@ -86,7 +86,7 @@ public class TS_UrlDownloadUtils {
 //    public static String toText(TGS_Url sourceURL) {
 //        return toText(sourceURL, null);
 //    }
-    public static TGS_Union<String> toText(TGS_Url sourceURL, Duration timeout) {
+    public static TGS_UnionExcuse<String> toText(TGS_Url sourceURL, Duration timeout) {
         var u_bytes = toByteArray(sourceURL, timeout);
         if (u_bytes.isExcuse()) {
             return u_bytes.toExcuse();
@@ -94,7 +94,7 @@ public class TS_UrlDownloadUtils {
         if (d.infoEnable) {
             d.ci("toText", "bytes is null");
         }
-        return TGS_Union.of(new String(u_bytes.value(), StandardCharsets.UTF_8));
+        return TGS_UnionExcuse.of(new String(u_bytes.value(), StandardCharsets.UTF_8));
     }
 
     public static String toBase64_orEmpty(TGS_Url sourceURL) {
@@ -106,23 +106,23 @@ public class TS_UrlDownloadUtils {
         return TGS_CryptUtils.encrypt64_orEmpty(bytes);
     }
 
-    public static TGS_UnionExcuse toFile(TGS_Url sourceURL, Path destFile) {
+    public static TGS_UnionExcuseVoid toFile(TGS_Url sourceURL, Path destFile) {
         return toFile(sourceURL, destFile, null);
     }
 
-    public static TGS_UnionExcuse toFile(TGS_Url sourceURL, Path destFile, Duration timeout) {
+    public static TGS_UnionExcuseVoid toFile(TGS_Url sourceURL, Path destFile, Duration timeout) {
         var u_delete = TS_FileUtils.deleteFileIfExists(destFile);
         if (u_delete.isExcuse()) {
-            return TGS_UnionExcuse.ofExcuse(u_delete.excuse());
+            return TGS_UnionExcuseVoid.ofExcuse(u_delete.excuse());
         }
         if (u_delete.isExcuse()) {
-            return TGS_UnionExcuse.ofExcuse(d.className, "toFile", "cannot delete %s".formatted(destFile.toString()));
+            return TGS_UnionExcuseVoid.ofExcuse(d.className, "toFile", "cannot delete %s".formatted(destFile.toString()));
         }
         URL url;
         try {
             url = URI.create(sourceURL.url.toString()).toURL();
         } catch (MalformedURLException ex) {
-            return TGS_UnionExcuse.ofExcuse(ex);
+            return TGS_UnionExcuseVoid.ofExcuse(ex);
         }
         if (timeout != null) {
             try {
@@ -135,16 +135,16 @@ public class TS_UrlDownloadUtils {
                     fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
                     var u_isEmptyFile = TS_FileUtils.isEmptyFile(destFile);
                     if (u_isEmptyFile.isExcuse()) {
-                        return TGS_UnionExcuse.ofExcuse(u_isEmptyFile.excuse());
+                        return TGS_UnionExcuseVoid.ofExcuse(u_isEmptyFile.excuse());
                     }
                     if (!u_isEmptyFile.value()) {
-                        return TGS_UnionExcuse.ofVoid();
+                        return TGS_UnionExcuseVoid.ofVoid();
                     }
                     TS_FileUtils.deleteFileIfExists(destFile);
-                    return TGS_UnionExcuse.ofExcuse(d.className, "toFile", "file is downloaded as empty %s".formatted(sourceURL.toString()));
+                    return TGS_UnionExcuseVoid.ofExcuse(d.className, "toFile", "file is downloaded as empty %s".formatted(sourceURL.toString()));
                 }
             } catch (IOException ex) {
-                return TGS_UnionExcuse.ofExcuse(ex);
+                return TGS_UnionExcuseVoid.ofExcuse(ex);
             }
         }
         try (var fileOutputStream = new FileOutputStream(destFile.toFile()); var readableByteChannel = Channels.newChannel(url.openStream());) {
@@ -152,19 +152,19 @@ public class TS_UrlDownloadUtils {
             fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
             var u_isEmptyFile = TS_FileUtils.isEmptyFile(destFile);
             if (u_isEmptyFile.isExcuse()) {
-                return TGS_UnionExcuse.ofExcuse(u_isEmptyFile.excuse());
+                return TGS_UnionExcuseVoid.ofExcuse(u_isEmptyFile.excuse());
             }
             if (!u_isEmptyFile.value()) {
-                return TGS_UnionExcuse.ofVoid();
+                return TGS_UnionExcuseVoid.ofVoid();
             }
             TS_FileUtils.deleteFileIfExists(destFile);
             return null;
         } catch (IOException ex) {
-            return TGS_UnionExcuse.ofExcuse(ex);
+            return TGS_UnionExcuseVoid.ofExcuse(ex);
         }
     }
 
-    public static TGS_Union<byte[]> toByteArray(TGS_Url sourceURL, Duration timeout) {
+    public static TGS_UnionExcuse<byte[]> toByteArray(TGS_Url sourceURL, Duration timeout) {
         try {
             var url = URI.create(sourceURL.url.toString()).toURL();
             d.ci("toByteArray", "url", url);
@@ -190,10 +190,10 @@ public class TS_UrlDownloadUtils {
                 baos.flush();
                 var byteArray = baos.toByteArray();
                 d.ci("toByteArray", "read byte", "ended", byteArray.length, new String(byteArray, StandardCharsets.UTF_8));
-                return TGS_Union.of(byteArray);
+                return TGS_UnionExcuse.of(byteArray);
             }
         } catch (IOException ex) {
-            return TGS_Union.ofExcuse(ex);
+            return TGS_UnionExcuse.ofExcuse(ex);
         }
     }
 }

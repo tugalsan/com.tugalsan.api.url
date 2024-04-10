@@ -8,23 +8,23 @@ import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.string.client.TGS_StringUtils;
-import com.tugalsan.api.union.client.TGS_Union;
 import com.tugalsan.api.union.client.TGS_UnionExcuse;
+import com.tugalsan.api.union.client.TGS_UnionExcuseVoid;
 
 public class TS_UrlUtils {
 
     final private static TS_Log d = TS_Log.of(TS_UrlUtils.class);
 
-    public static TGS_Union<String> mime(TGS_Url img) {
+    public static TGS_UnionExcuse<String> mime(TGS_Url img) {
         var typ = URLConnection.getFileNameMap().getContentTypeFor(TGS_UrlUtils.getFileNameFull(img));
         if (TGS_StringUtils.isPresent(typ) && typ.length() < 5) {
-            return TGS_Union.of(typ);
+            return TGS_UnionExcuse.of(typ);
         }
         try {
             var url = new URI(img.url.toString()).toURL();
-            return TGS_Union.of(url.openConnection().getContentType().replace(";charset=UTF-8", ""));
+            return TGS_UnionExcuse.of(url.openConnection().getContentType().replace(";charset=UTF-8", ""));
         } catch (IOException | URISyntaxException ex) {
-            return new TGS_Union(typ, ex);
+            return new TGS_UnionExcuse(typ, ex);
         }
     }
 //    final private static TS_Log d = TS_Log.of(TS_UrlUtils.class);
@@ -52,7 +52,7 @@ public class TS_UrlUtils {
         return TGS_Url.of(url.toString());
     }
 
-    public TGS_UnionExcuse isReachable(TGS_Url urlo, Integer optionalTimeOut) {
+    public TGS_UnionExcuseVoid isReachable(TGS_Url urlo, Integer optionalTimeOut) {
         try {
             var url = URI.create(urlo.toString()).toURL();
             HttpURLConnection con = null;
@@ -65,9 +65,9 @@ public class TS_UrlUtils {
                 con.setRequestMethod("HEAD");
                 var responseCode = con.getResponseCode();
                 if (200 <= responseCode && responseCode <= 399) {
-                    return TGS_UnionExcuse.ofVoid();
+                    return TGS_UnionExcuseVoid.ofVoid();
                 } else {
-                    return TGS_UnionExcuse.ofExcuse(d.className, "isReacable", "response code is %d".formatted(responseCode));
+                    return TGS_UnionExcuseVoid.ofExcuse(d.className, "isReacable", "response code is %d".formatted(responseCode));
                 }
             } finally {
                 if (con != null) {
@@ -75,11 +75,11 @@ public class TS_UrlUtils {
                 }
             }
         } catch (IOException ex) {
-            return TGS_UnionExcuse.ofExcuse(ex);
+            return TGS_UnionExcuseVoid.ofExcuse(ex);
         }
     }
 
-    public TGS_Union< Long> getLengthInBytes(TGS_Url urlo) {
+    public TGS_UnionExcuse< Long> getLengthInBytes(TGS_Url urlo) {
         try {
             var url = URI.create(urlo.toString()).toURL();
             HttpURLConnection conn = null;
@@ -88,42 +88,42 @@ public class TS_UrlUtils {
                 conn.setRequestMethod("HEAD");
                 var l = conn.getContentLengthLong();
                 conn.disconnect();
-                return TGS_Union.of(l);
+                return TGS_UnionExcuse.of(l);
             } finally {
                 if (conn != null) {
                     conn.disconnect();
                 }
             }
         } catch (IOException ex) {
-            return TGS_Union.ofExcuse(ex);
+            return TGS_UnionExcuse.ofExcuse(ex);
         }
     }
 
-    public TGS_Union<InputStream> newInputStream(TGS_Url url) {
+    public TGS_UnionExcuse<InputStream> newInputStream(TGS_Url url) {
         try {
-            return TGS_Union.of(URI.create(url.toString()).toURL().openConnection().getInputStream());
+            return TGS_UnionExcuse.of(URI.create(url.toString()).toURL().openConnection().getInputStream());
         } catch (IOException ex) {
-            return TGS_Union.ofExcuse(ex);
+            return TGS_UnionExcuse.ofExcuse(ex);
         }
     }
 
-    public TGS_Union<OutputStream> newOutputStream(TGS_Url url) {
+    public TGS_UnionExcuse<OutputStream> newOutputStream(TGS_Url url) {
         try {
-            return TGS_Union.of(URI.create(url.toString()).toURL().openConnection().getOutputStream());
+            return TGS_UnionExcuse.of(URI.create(url.toString()).toURL().openConnection().getOutputStream());
         } catch (IOException ex) {
-            return TGS_Union.ofExcuse(ex);
+            return TGS_UnionExcuse.ofExcuse(ex);
         }
     }
 
-    public static TGS_Union<TGS_Url> toUrl(Path file) {
+    public static TGS_UnionExcuse<TGS_Url> toUrl(Path file) {
         try {
-            return TGS_Union.of(TGS_Url.of(file.toUri().toURL().toExternalForm()));
+            return TGS_UnionExcuse.of(TGS_Url.of(file.toUri().toURL().toExternalForm()));
         } catch (MalformedURLException ex) {
-            return TGS_Union.ofExcuse(ex);
+            return TGS_UnionExcuse.ofExcuse(ex);
         }
     }
 
-    public static TGS_Union<Path> toPathOrError(TGS_Url url) {
+    public static TGS_UnionExcuse<Path> toPathOrError(TGS_Url url) {
         return TS_PathUtils.toPathOrError(url.toString());
     }
 

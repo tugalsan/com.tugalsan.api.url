@@ -3,7 +3,7 @@ package com.tugalsan.api.url.client;
 import com.google.gwt.http.client.*;
 import com.tugalsan.api.runnable.client.TGS_RunnableType1;
 import com.tugalsan.api.log.client.TGC_Log;
-import com.tugalsan.api.union.client.TGS_UnionExcuse;
+import com.tugalsan.api.union.client.TGS_UnionExcuseVoid;
 
 public class TGC_UrlRequestUtils {
 
@@ -13,7 +13,7 @@ public class TGC_UrlRequestUtils {
         return 200;
     }
 
-    public static TGS_UnionExcuse get(TGS_Url url, TGS_RunnableType1<Response> onResponse) {
+    public static TGS_UnionExcuseVoid get(TGS_Url url, TGS_RunnableType1<Response> onResponse) {
         try {
             var builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url.toString()));
             builder.sendRequest(null, new RequestCallback() {
@@ -33,16 +33,16 @@ public class TGC_UrlRequestUtils {
                     onResponse.run(response);
                 }
             });
-            return TGS_UnionExcuse.ofVoid();
+            return TGS_UnionExcuseVoid.ofVoid();
         } catch (RequestException ex) {
             d.ce("post.onError", "ERROR: Couldn't connect to server");
             d.ce("post.onError", ex);
             onResponse.run(null);
-            return TGS_UnionExcuse.ofExcuse(ex);
+            return TGS_UnionExcuseVoid.ofExcuse(ex);
         }
     }
 
-    public static TGS_UnionExcuse post(TGS_Url url, CharSequence requestData, TGS_RunnableType1<Response> onResponse) {
+    public static TGS_UnionExcuseVoid post(TGS_Url url, CharSequence requestData, TGS_RunnableType1<Response> onResponse) {
         try {
             var builder = new RequestBuilder(RequestBuilder.POST, URL.encode(url.toString()));
             builder.setHeader("Content-type", "application/x-www-form-urlencoded");
@@ -63,12 +63,12 @@ public class TGC_UrlRequestUtils {
                     onResponse.run(response);
                 }
             });
-            return TGS_UnionExcuse.ofVoid();
+            return TGS_UnionExcuseVoid.ofVoid();
         } catch (RequestException ex) {
             d.ce("post.onError", "ERROR: Couldn't connect to server");
             d.ce("post.onError", ex);
             onResponse.run(null);
-            return TGS_UnionExcuse.ofExcuse(ex);
+            return TGS_UnionExcuseVoid.ofExcuse(ex);
         }
     }
 }
