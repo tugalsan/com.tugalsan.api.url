@@ -89,7 +89,7 @@ public class TS_UrlDownloadUtils {
     public static TGS_Union<String> toText(TGS_Url sourceURL, Duration timeout) {
         var u_bytes = toByteArray(sourceURL, timeout);
         if (u_bytes.isExcuse()) {
-            return TGS_Union.ofExcuse(u_bytes.excuse());
+            return u_bytes.toExcuse();
         }
         if (d.infoEnable) {
             d.ci("toText", "bytes is null");
