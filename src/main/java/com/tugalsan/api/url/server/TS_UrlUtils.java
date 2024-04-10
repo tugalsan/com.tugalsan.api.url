@@ -9,6 +9,7 @@ import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.string.client.TGS_StringUtils;
 import com.tugalsan.api.union.client.TGS_Union;
+import com.tugalsan.api.union.client.TGS_UnionExcuse;
 
 public class TS_UrlUtils {
 
@@ -51,7 +52,7 @@ public class TS_UrlUtils {
         return TGS_Url.of(url.toString());
     }
 
-    public TGS_Union<Boolean> isReachable(TGS_Url urlo, Integer optionalTimeOut) {
+    public TGS_UnionExcuse isReachable(TGS_Url urlo, Integer optionalTimeOut) {
         try {
             var url = URI.create(urlo.toString()).toURL();
             HttpURLConnection con = null;
@@ -63,14 +64,18 @@ public class TS_UrlUtils {
                 }
                 con.setRequestMethod("HEAD");
                 var responseCode = con.getResponseCode();
-                return TGS_Union.of(200 <= responseCode && responseCode <= 399);
+                if (200 <= responseCode && responseCode <= 399) {
+                    return TGS_UnionExcuse.ofVoid();
+                } else {
+                    return TGS_UnionExcuse.ofExcuse(d.className, "isReacable", "response code is %d".formatted(responseCode));
+                }
             } finally {
                 if (con != null) {
                     con.disconnect();
                 }
             }
         } catch (IOException ex) {
-            return TGS_Union.ofExcuse(ex);
+            return TGS_UnionExcuse.ofExcuse(ex);
         }
     }
 
