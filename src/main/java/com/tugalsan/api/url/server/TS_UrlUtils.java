@@ -24,7 +24,7 @@ public class TS_UrlUtils {
             var url = new URI(img.url.toString()).toURL();
             return TGS_UnionExcuse.of(url.openConnection().getContentType().replace(";charset=UTF-8", ""));
         } catch (IOException | URISyntaxException ex) {
-            return new TGS_UnionExcuse(typ, ex);
+            return TGS_UnionExcuse.of(typ);
         }
     }
 //    final private static TS_Log d = TS_Log.of(TS_UrlUtils.class);
