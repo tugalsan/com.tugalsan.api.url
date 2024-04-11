@@ -18,13 +18,13 @@ public class TS_UrlUtils {
     public static TGS_UnionExcuse<String> mime(TGS_Url img) {
         var typ = URLConnection.getFileNameMap().getContentTypeFor(TGS_UrlUtils.getFileNameFull(img));
         if (TGS_StringUtils.isPresent(typ) && typ.length() < 5) {
-            return TGS_UnionExcuse.of(typ);
+            return TGS_UnionExcuse.of(typ.replace(";charset=UTF-8", ""));
         }
         try {
             var url = new URI(img.url.toString()).toURL();
             return TGS_UnionExcuse.of(url.openConnection().getContentType().replace(";charset=UTF-8", ""));
         } catch (IOException | URISyntaxException ex) {
-            return TGS_UnionExcuse.of(typ);
+            return TGS_UnionExcuse.ofExcuse(ex);
         }
     }
 //    final private static TS_Log d = TS_Log.of(TS_UrlUtils.class);
