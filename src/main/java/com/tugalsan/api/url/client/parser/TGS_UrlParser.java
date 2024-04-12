@@ -1,25 +1,28 @@
 package com.tugalsan.api.url.client.parser;
 
+import com.tugalsan.api.union.client.TGS_UnionExcuse;
 import com.tugalsan.api.url.client.*;
 import java.io.Serializable;
 
 public class TGS_UrlParser implements Serializable {
 
-    public TGS_UrlParser() {//DTO
+    private TGS_UrlParser() {//DTO
     }
 
-    public static TGS_UrlParser of(TGS_Url url) {
-        return new TGS_UrlParser(url);
+    public static TGS_UnionExcuse<TGS_UrlParser> of(TGS_Url url) {
+        var _this = new TGS_UrlParser();
+        _this.protocol = new TGS_UrlParserProtocol(url);
+        var u_host = TGS_UrlParserHost.of(_this.protocol, url);
+        if (u_host.isExcuse()) {
+            return u_host.toExcuse();
+        }
+        _this.host = u_host.value();
+        _this.path = new TGS_UrlParserPath(_this.protocol, _this.host, url);
+        _this.quary = new TGS_UrlParserQuary(_this.protocol, _this.host, _this.path, url);
+        _this.anchor = new TGS_UrlParserAnchor(_this.protocol, _this.host, _this.path, _this.quary, url);
+        return TGS_UnionExcuse.of(_this);
     }
 
-    //https://localhost:8443/res-common/
-    private TGS_UrlParser(TGS_Url url) {
-        protocol = new TGS_UrlParserProtocol(url);
-        host = new TGS_UrlParserHost(protocol, url);
-        path = new TGS_UrlParserPath(protocol, host, url);
-        quary = new TGS_UrlParserQuary(protocol, host, path, url);
-        anchor = new TGS_UrlParserAnchor(protocol, host, path, quary, url);
-    }
     public TGS_UrlParserProtocol protocol;
     public TGS_UrlParserHost host;
     public TGS_UrlParserPath path;
@@ -35,8 +38,8 @@ public class TGS_UrlParser implements Serializable {
         return TGS_Url.of(toString());
     }
 
-    public TGS_UrlParser cloneIt() {
-        return new TGS_UrlParser(toUrl());
+    public TGS_UnionExcuse<TGS_UrlParser> cloneIt() {
+        return TGS_UrlParser.of(toUrl());
     }
 
 }

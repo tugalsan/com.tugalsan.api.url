@@ -3,6 +3,8 @@ package com.tugalsan.api.url.client;
 import com.tugalsan.api.cast.client.*;
 import com.tugalsan.api.list.client.*;
 import com.tugalsan.api.log.client.*;
+import com.tugalsan.api.string.client.TGS_StringUtils;
+import com.tugalsan.api.union.client.TGS_UnionExcuse;
 import com.tugalsan.api.url.TGS_UrlParameterSafe;
 import java.util.*;
 
@@ -42,23 +44,31 @@ public class TGC_UrlQueryUtils {
 //            new TGS_Tuple2(" ", "%20")
 //    );
 
-    public static Boolean getParameterValue(TGS_Url url, CharSequence paramName, Boolean defaultValue) {
-        var strValue = getParameterValue(url, paramName.toString(), String.valueOf(defaultValue));
-        return TGS_CastUtils.toBoolean(strValue, defaultValue);
+    public static TGS_UnionExcuse<Boolean> getParameterValueBoolean(TGS_Url url, CharSequence paramName) {
+        var strValue = getParameterValueString(url, paramName);
+        if (strValue.isExcuse()) {
+            return strValue.toExcuse();
+        }
+        return TGS_CastUtils.toBoolean(strValue.value());
     }
 
-    public static Integer getParameterValue(TGS_Url url, CharSequence paramName, Integer defaultValue) {
-        var strValue = getParameterValue(url, paramName.toString(), String.valueOf(defaultValue));
-        return TGS_CastUtils.toInteger(strValue, defaultValue);
+    public static TGS_UnionExcuse<Integer> getParameterValueInteger(TGS_Url url, CharSequence paramName, Integer defaultValue) {
+        var strValue = getParameterValueString(url, paramName);
+        if (strValue.isExcuse()) {
+            return strValue.toExcuse();
+        }
+        return TGS_CastUtils.toInteger(strValue.value());
     }
 
-    public static Long getParameterValue(TGS_Url url, CharSequence paramName, Long defaultValue) {
-        var strValue = getParameterValue(url, paramName, String.valueOf(defaultValue));
-        var lngValue = TGS_CastUtils.toLong(strValue);
-        return lngValue == null ? defaultValue : lngValue;
+    public static TGS_UnionExcuse<Long> getParameterValueLong(TGS_Url url, CharSequence paramName) {
+        var strValue = getParameterValueString(url, paramName);
+        if (strValue.isExcuse()) {
+            return strValue.toExcuse();
+        }
+        return TGS_CastUtils.toLong(strValue.value());
     }
 
-    public static String getParameterValue(TGS_Url url, CharSequence paramName, CharSequence defaultValue) {
+    public static TGS_UnionExcuse<String> getParameterValueString(TGS_Url url, CharSequence paramName) {
         var query = sliceQuery(url);
         d.ci("getParameters", "query", query);
         for (var pair : query.split("&")) {
@@ -72,13 +82,14 @@ public class TGC_UrlQueryUtils {
             if (Objects.equals(pairParsed[0], paramName)) {
                 d.ci("getParameters", "found", pairParsed[0], paramName);
                 var value = pairParsed[1];
-                d.ci("getParameters", "valueOnce", value);
-                var result = value == null || value.isEmpty() ? (defaultValue == null ? null : defaultValue.toString()) : value;
-                d.ci("getParameters", "valueTwice", result);
-                return result;
+                d.ci("getParameters", "value", value);
+                if (TGS_StringUtils.isNullOrEmpty(value)) {
+                    return TGS_UnionExcuse.ofExcuse(TGC_UrlQueryUtils.class.getSimpleName(), "getParameterValue", "TGS_StringUtils.isNullOrEmpty(value)");
+                }
+                return TGS_UnionExcuse.of(value);
             }
         }
-        return defaultValue == null ? null : defaultValue.toString();
+        return TGS_UnionExcuse.ofExcuse(TGC_UrlQueryUtils.class.getSimpleName(), "getParameterValue", "not found");
     }
 
     public static List<TGS_UrlParameterSafe> getParameters(TGS_Url url) {

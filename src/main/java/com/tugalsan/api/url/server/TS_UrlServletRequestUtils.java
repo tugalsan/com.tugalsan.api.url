@@ -5,13 +5,14 @@ import javax.servlet.http.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.stream.client.*;
 import com.tugalsan.api.string.client.*;
+import com.tugalsan.api.union.client.TGS_UnionExcuse;
 import com.tugalsan.api.url.client.*;
 
 public class TS_UrlServletRequestUtils {
 
     final private static TS_Log d = TS_Log.of(TS_UrlServletRequestUtils.class);
 
-    public static String getParameterValueFrom64(HttpServletRequest rq, CharSequence paramNameAsIs) {
+    public static TGS_UnionExcuse<String> getParameterValueFrom64(HttpServletRequest rq, CharSequence paramNameAsIs) {
         var val64Safe = getParameterValue(rq, paramNameAsIs, false);
         d.ci("getParameterValueFrom64", paramNameAsIs, "val64Safe", val64Safe);
         var valReadable = TGS_UrlQueryUtils.param64UrlSafe_2_readable(val64Safe);

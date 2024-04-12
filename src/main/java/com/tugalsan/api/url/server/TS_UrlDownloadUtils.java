@@ -9,6 +9,7 @@ import java.nio.file.*;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.log.server.*;
+import com.tugalsan.api.string.client.TGS_StringUtils;
 import com.tugalsan.api.union.client.TGS_UnionExcuse;
 import com.tugalsan.api.union.client.TGS_UnionExcuseVoid;
 import java.time.Duration;
@@ -94,16 +95,20 @@ public class TS_UrlDownloadUtils {
         if (d.infoEnable) {
             d.ci("toText", "bytes is null");
         }
-        return TGS_UnionExcuse.of(new String(u_bytes.value(), StandardCharsets.UTF_8));
+        var text = new String(u_bytes.value(), StandardCharsets.UTF_8);
+        if (TGS_StringUtils.isNullOrEmpty(text)){
+            return TGS_UnionExcuse.ofExcuse(d.className, "toText", "TGS_StringUtils.isNullOrEmpty(text)");
+        }
+        return TGS_UnionExcuse.of(text);
     }
 
-    public static String toBase64_orEmpty(TGS_Url sourceURL) {
-        return toBase64_orEmpty(sourceURL, null);
+    public static TGS_UnionExcuse<String> toBase64(TGS_Url sourceURL) {
+        return toBase64(sourceURL, null);
     }
 
-    public static String toBase64_orEmpty(TGS_Url sourceURL, Duration timeout) {
+    public static TGS_UnionExcuse<String> toBase64(TGS_Url sourceURL, Duration timeout) {
         var bytes = toByteArray(sourceURL, timeout).orElse(null);
-        return TGS_CryptUtils.encrypt64_orEmpty(bytes);
+        return TGS_CryptUtils.encrypt64(bytes);
     }
 
     public static TGS_UnionExcuseVoid toFile(TGS_Url sourceURL, Path destFile) {

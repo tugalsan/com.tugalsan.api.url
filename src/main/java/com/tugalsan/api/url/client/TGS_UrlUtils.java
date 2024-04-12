@@ -4,6 +4,7 @@ package com.tugalsan.api.url.client;
 //import com.google.gwt.http.client.UrlBuilder;
 import java.util.*;
 import com.tugalsan.api.string.client.*;
+import com.tugalsan.api.union.client.TGS_UnionExcuse;
 import com.tugalsan.api.url.client.parser.*;
 
 public class TGS_UrlUtils {
@@ -44,12 +45,16 @@ public class TGS_UrlUtils {
         return "_-.";
     }//REQ: TGS_UrlQueryUtils -> min three chars
 
-    public static String getAppName(TGS_Url url) {
-        var parser = TGS_UrlParser.of(url);
-        if (parser.path.paths.isEmpty()) {
-            return null;
+    public static TGS_UnionExcuse<String> getAppName(TGS_Url url) {
+        var u_parser = TGS_UrlParser.of(url);
+        if (u_parser.isExcuse()) {
+            return u_parser.toExcuse();
         }
-        return parser.path.paths.get(0);
+        var parser = u_parser.value();
+        if (parser.path.paths.isEmpty()) {
+            return TGS_UnionExcuse.ofExcuse(TGS_UrlUtils.class.getSimpleName(), "getAppName", "parser.path.paths.isEmpty()");
+        }
+        return TGS_UnionExcuse.of(parser.path.paths.get(0));
     }
 
     public static String getFileNameLabel(TGS_Url url) {

@@ -2,6 +2,7 @@ package com.tugalsan.api.url.client;
 
 import com.tugalsan.api.crypto.client.*;
 import com.tugalsan.api.string.client.*;
+import com.tugalsan.api.union.client.TGS_UnionExcuse;
 
 public class TGS_UrlQueryUtils {
 
@@ -23,23 +24,29 @@ public class TGS_UrlQueryUtils {
 
     //BASE64 A–Z, a–z, 0–9, +, / and =
     //URL SAFE -._~
-    public static String readable_2_Param64UrlSafe(CharSequence paramValueReadable) {
+    public static TGS_UnionExcuse<String> readable_2_Param64UrlSafe(CharSequence paramValueReadable) {
         if (TGS_StringUtils.isNullOrEmpty(paramValueReadable)) {
-            return null;
+            return TGS_UnionExcuse.ofExcuse(TGS_UrlQueryUtils.class.getSimpleName(), "readable_2_Param64UrlSafe", "TGS_StringUtils.isNullOrEmpty(paramValueReadable)");
         }
-        return TGS_CryptUtils.encrypt64_orEmpty(paramValueReadable)
+        var u = TGS_CryptUtils.encrypt64(paramValueReadable);
+        if (u.isExcuse()) {
+            return u.toExcuse();
+        }
+        return TGS_UnionExcuse.of(u.value()
                 .replace("+", String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(0)))
                 .replace("/", String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(1)))
-                .replace("=", String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(2)));
+                .replace("=", String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(2)))
+        );
     }
 
-    public static String param64UrlSafe_2_readable(CharSequence base64UrlSafe) {
+    public static TGS_UnionExcuse<String> param64UrlSafe_2_readable(CharSequence base64UrlSafe) {
         if (TGS_StringUtils.isNullOrEmpty(base64UrlSafe)) {
-            return null;
+            return TGS_UnionExcuse.ofExcuse(TGS_UrlQueryUtils.class.getSimpleName(), "param64UrlSafe_2_readable", "TGS_StringUtils.isNullOrEmpty(paramValueReadable)");
         }
-        return TGS_CryptUtils.decrypt64_orEmpty(base64UrlSafe.toString()
+        return TGS_CryptUtils.decrypt64(base64UrlSafe.toString()
                 .replace(String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(0)), "+")
                 .replace(String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(1)), "/")
-                .replace(String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(2)), "="));
+                .replace(String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(2)), "=")
+        );
     }
 }

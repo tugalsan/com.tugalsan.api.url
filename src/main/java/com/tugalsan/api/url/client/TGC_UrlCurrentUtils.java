@@ -4,6 +4,7 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.user.client.*;
 import com.tugalsan.api.cast.client.*;
+import com.tugalsan.api.union.client.TGS_UnionExcuse;
 
 public class TGC_UrlCurrentUtils {
 
@@ -15,7 +16,7 @@ public class TGC_UrlCurrentUtils {
         return GWT.getModuleBaseURL();
     }
 
-    public static Integer getServerPort() {
+    public static TGS_UnionExcuse<Integer> getServerPort() {
         return TGS_CastUtils.toInteger(Window.Location.getPort());
     }
 

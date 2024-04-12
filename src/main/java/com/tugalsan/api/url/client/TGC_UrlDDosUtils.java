@@ -13,10 +13,18 @@ public class TGC_UrlDDosUtils {
 
     public static void attack(TGS_Url url, RequestCallback requestCallback) {
         try {
-            var parser = TGS_UrlParser.of(url);
-            parser.quary.setParameterValueUrlSafe("p", TGS_UrlQueryUtils.readable_2_Param64UrlSafe(
-                    String.valueOf(TGS_RandomUtils.nextInt(0, Integer.MAX_VALUE)))
+            var u_parser = TGS_UrlParser.of(url);
+            if (u_parser.isExcuse()){
+                return;
+            }
+            var parser = u_parser.value();
+            var u = TGS_UrlQueryUtils.readable_2_Param64UrlSafe(
+                    String.valueOf(TGS_RandomUtils.nextInt(0, Integer.MAX_VALUE))
             );
+            if (u.isExcuse()) {
+                return;
+            }
+            parser.quary.setParameterValueUrlSafe("p", u.value());
             var builder = new RequestBuilder(RequestBuilder.GET, URL.encode(parser.toString()));
             builder.sendRequest(null, new RequestCallback() {
                 @Override
