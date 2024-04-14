@@ -13,7 +13,11 @@ public class TS_UrlServletRequestUtils {
     final private static TS_Log d = TS_Log.of(TS_UrlServletRequestUtils.class);
 
     public static TGS_UnionExcuse<String> getParameterValueFrom64(HttpServletRequest rq, CharSequence paramNameAsIs) {
-        var val64Safe = getParameterValue(rq, paramNameAsIs, false);
+        var u_val64Safe = getParameterValue(rq, paramNameAsIs, false);
+        if (u_val64Safe.isExcuse()) {
+            return u_val64Safe;
+        }
+        var val64Safe = u_val64Safe.value();
         d.ci("getParameterValueFrom64", paramNameAsIs, "val64Safe", val64Safe);
         var valReadable = TGS_UrlQueryUtils.param64UrlSafe_2_readable(val64Safe);
         d.ci("getParameterValueFrom64", paramNameAsIs, "valReadable", valReadable);
@@ -21,15 +25,21 @@ public class TS_UrlServletRequestUtils {
     }
 
     @Deprecated //NOT CHARACTER SAFE, USE getParameterValueFrom64 instead!
-    public static String getParameterValue(HttpServletRequest rq, CharSequence paramNameAsIs, boolean dechiperVal2Readable) {
+    public static TGS_UnionExcuse<String> getParameterValue(HttpServletRequest rq, CharSequence paramNameAsIs, boolean dechiperVal2Readable) {
         var paramNameStr = paramNameAsIs.toString();
         var paramVal = rq.getParameter(paramNameStr);
         if (!dechiperVal2Readable) {
-            return TGS_StringUtils.toNullIfEmpty(paramVal);
+            if (TGS_StringUtils.isNullOrEmpty(paramVal)) {
+                return TGS_UnionExcuse.ofExcuse(d.className, "getParameterValue", "TGS_StringUtils.isNullOrEmpty(paramVal)");
+            }
+            return TGS_UnionExcuse.of(paramVal);
         }
         var paramValReadable = TS_UrlQueryUtils.toParamValueReadable(paramVal);
 //        d.ce("getParameterValue", "paramNameStr/paramVal/paramValReadable", paramNameStr, paramVal, paramValReadable);
-        return TGS_StringUtils.toNullIfEmpty(paramValReadable);
+        if (TGS_StringUtils.isNullOrEmpty(paramValReadable)) {
+            return TGS_UnionExcuse.ofExcuse(d.className, "getParameterValue", "TGS_StringUtils.isNullOrEmpty(paramValReadable)");
+        }
+        return TGS_UnionExcuse.of(paramValReadable);
     }
 
     public static List<String> getParameterNames(HttpServletRequest rq) {
