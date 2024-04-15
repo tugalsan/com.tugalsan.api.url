@@ -8,7 +8,7 @@ public class TGS_UrlParserParamUrlSafe implements Serializable {
     public TGS_UrlParserParamUrlSafe() {//DTO
     }
     public CharSequence name;
-    public CharSequence valueUrlSafe;
+    public CharSequence valueSafe;
 
     public TGS_UrlParserParamUrlSafe(CharSequence pair) {
         var parts = pair.toString().split("=");
@@ -16,19 +16,19 @@ public class TGS_UrlParserParamUrlSafe implements Serializable {
             return;
         }
         name = parts[0];
-        valueUrlSafe = parts[1];
+        valueSafe = parts[1];
     }
 
-    public TGS_UrlParserParamUrlSafe(CharSequence name, CharSequence valueUrlSafe) {
+    public TGS_UrlParserParamUrlSafe(CharSequence name, CharSequence valueSafe) {
         this.name = name;
-        this.valueUrlSafe = valueUrlSafe;
+        this.valueSafe = valueSafe;
     }
 
     @Override
     public String toString() {
-        if (TGS_StringUtils.isNullOrEmpty(name) || TGS_StringUtils.isNullOrEmpty(valueUrlSafe)) {
+        if (TGS_StringUtils.isNullOrEmpty(name) || TGS_StringUtils.isNullOrEmpty(valueSafe)) {
             return "";
         }
-        return name + "=" + valueUrlSafe;
+        return name + "=" + valueSafe;
     }
 }
