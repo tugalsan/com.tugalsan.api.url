@@ -9,6 +9,30 @@ import com.tugalsan.api.url.client.parser.*;
 
 public class TGS_UrlUtils {
 
+    public static boolean isChildOf(TGS_Url base, TGS_Url self) {
+        return !self.toString().startsWith("http")
+                || !self.toString().startsWith("ftp")
+                || !self.toString().startsWith("sftp")
+                || self.toString().startsWith(base.toString());
+    }
+
+    public static TGS_Url trimAnchor(TGS_Url url) {
+        return TGS_Url.of(url.toString().substring(0, url.toString().indexOf("#")));
+    }
+
+    public static TGS_Url toFull(TGS_Url base, TGS_Url self) {
+        if (self.toString().startsWith(base.toString())) {
+            return self;
+        }
+        if (!isChildOf(base, self)) {
+            return self;
+        }
+        if (!base.toString().endsWith("/") && !self.toString().startsWith("/")) {
+            return TGS_Url.of(base.toString() + "/" + self.toString());
+        }
+        return TGS_Url.of(base.toString() + self.toString());
+    }
+
     public static boolean isHackedUrl(TGS_Url url) {
         if (url == null) {
             return false;
