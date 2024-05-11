@@ -17,7 +17,11 @@ public class TGS_UrlUtils {
     }
 
     public static TGS_Url trimAnchor(TGS_Url url) {
-        return TGS_Url.of(url.toString().substring(0, url.toString().indexOf("#")));
+        var idx = url.toString().indexOf("#");
+        if (idx == -1){
+            return url;
+        }
+        return TGS_Url.of(url.toString().substring(0, idx));
     }
 
     public static TGS_Url toFull(TGS_Url base, TGS_Url self) {
