@@ -10,15 +10,24 @@ import com.tugalsan.api.url.client.parser.*;
 public class TGS_UrlUtils {
 
     public static boolean isChildOf(TGS_Url base, TGS_Url self) {
-        return !self.toString().startsWith("http")
-                || !self.toString().startsWith("ftp")
-                || !self.toString().startsWith("sftp")
-                || self.toString().startsWith(base.toString());
+        if (self.toString().startsWith("../")) {
+            return false;
+        }
+        if (self.toString().startsWith("http")) {
+            return false;
+        }
+        if (self.toString().startsWith("ftp")) {
+            return false;
+        }
+        if (self.toString().startsWith("file")) {
+            return false;
+        }
+        return self.toString().startsWith(base.toString());
     }
 
     public static TGS_Url trimAnchor(TGS_Url url) {
         var idx = url.toString().indexOf("#");
-        if (idx == -1){
+        if (idx == -1) {
             return url;
         }
         return TGS_Url.of(url.toString().substring(0, idx));
