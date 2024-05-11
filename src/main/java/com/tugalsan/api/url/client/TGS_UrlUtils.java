@@ -11,18 +11,30 @@ public class TGS_UrlUtils {
 
     public static boolean isChildOf(TGS_Url base, TGS_Url self) {
         if (self.toString().startsWith("../")) {
+            System.out.println("isChildOf .. " + self);
             return false;
         }
-        if (self.toString().startsWith("http")) {
+        if (self.toString().startsWith("http:")) {
+            System.out.println("isChildOf http " + self);
+            return false;
+        }
+        if (self.toString().startsWith("https:")) {
+            System.out.println("isChildOf http " + self);
             return false;
         }
         if (self.toString().startsWith("ftp")) {
+            System.out.println("isChildOf .. " + self);
             return false;
         }
-        if (self.toString().startsWith("file")) {
+        if (self.toString().startsWith("ftp:")) {
+            System.out.println("isChildOf .. " + self);
             return false;
         }
-        return self.toString().startsWith(base.toString());
+        if (self.toString().startsWith("file:")) {
+            System.out.println("isChildOf ftp " + self);
+            return false;
+        }
+        return true;
     }
 
     public static TGS_Url trimAnchor(TGS_Url url) {
