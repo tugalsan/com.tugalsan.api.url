@@ -7,6 +7,7 @@ module com.tugalsan.api.url {
     requires com.tugalsan.api.log;
     requires com.tugalsan.api.network;
     requires com.tugalsan.api.cast;
+    requires com.tugalsan.api.union;
     requires com.tugalsan.api.stream;
     requires com.tugalsan.api.crypto;
     requires com.tugalsan.api.file;

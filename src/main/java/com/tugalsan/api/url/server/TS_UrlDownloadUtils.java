@@ -9,6 +9,7 @@ import java.nio.file.*;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.log.server.*;
+import com.tugalsan.api.union.client.TGS_UnionExcuseVoid;
 import com.tugalsan.api.unsafe.client.*;
 import java.time.Duration;
 
@@ -99,15 +100,15 @@ public class TS_UrlDownloadUtils {
         return TGS_CryptUtils.encrypt64(bytes);
     }
 
-    public static Path toFile(TGS_Url sourceURL, Path destFile) {
+    public static TGS_UnionExcuseVoid toFile(TGS_Url sourceURL, Path destFile) {
         return toFile(sourceURL, destFile, null);
     }
 
-    public static Path toFile(TGS_Url sourceURL, Path destFile, Duration timeout) {
+    public static TGS_UnionExcuseVoid toFile(TGS_Url sourceURL, Path destFile, Duration timeout) {
         return TGS_UnSafe.call(() -> {
-            if (!TS_FileUtils.deleteFileIfExists(destFile, true)) {
-                d.ce("toFile", "cannot delete destFile file, skipped!", sourceURL, destFile);
-                return null;
+            var u = TS_FileUtils.deleteFileIfExists(destFile);
+            if (u.isExcuse()) {
+                return u;
             }
             var url = URI.create(sourceURL.url.toString()).toURL();
             if (timeout != null) {
@@ -118,23 +119,23 @@ public class TS_UrlDownloadUtils {
                 try (var fileOutputStream = new FileOutputStream(destFile.toFile()); var is = con.getInputStream(); var readableByteChannel = Channels.newChannel(is);) {
                     var fileChannel = fileOutputStream.getChannel();
                     fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-                    if (!TS_FileUtils.isEmptyFile(destFile)) {
-                        return destFile;
+                    if (TS_FileUtils.isEmptyFile(destFile)) {
+                        TS_FileUtils.deleteFileIfExists(destFile);
+                        return TGS_UnionExcuseVoid.ofExcuse(d.className, "toFile", "TS_FileUtils.isEmptyFile(destFile)");
                     }
-                    TS_FileUtils.deleteFileIfExists(destFile);
-                    return null;
+                    return TGS_UnionExcuseVoid.ofVoid();
                 }
             }
             try (var fileOutputStream = new FileOutputStream(destFile.toFile()); var readableByteChannel = Channels.newChannel(url.openStream());) {
                 var fileChannel = fileOutputStream.getChannel();
                 fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-                if (!TS_FileUtils.isEmptyFile(destFile)) {
-                    return destFile;
+                if (TS_FileUtils.isEmptyFile(destFile)) {
+                    TS_FileUtils.deleteFileIfExists(destFile);
+                    return TGS_UnionExcuseVoid.ofExcuse(d.className, "toFile", "TS_FileUtils.isEmptyFile(destFile)");
                 }
-                TS_FileUtils.deleteFileIfExists(destFile);
-                return null;
+                return TGS_UnionExcuseVoid.ofVoid();
             }
-        }, e -> null);
+        }, e -> TGS_UnionExcuseVoid.ofVoid());
     }
 
     public static byte[] toByteArray(TGS_Url sourceURL, Duration timeout) {
