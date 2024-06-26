@@ -88,6 +88,6 @@ public class TGS_UrlParserHost implements Serializable {
 //        System.out.println("pa: " + pa);
 //        System.out.println("qu: " + qu);
 //        System.out.println("an: " + an);
-        return TGS_StringUtils.concat(pr, ho);
+        return TGS_StringUtils.cmn().concat(pr, ho);
     }
 }

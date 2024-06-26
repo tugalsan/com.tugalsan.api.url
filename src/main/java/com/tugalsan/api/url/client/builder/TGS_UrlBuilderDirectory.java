@@ -21,9 +21,9 @@ public class TGS_UrlBuilderDirectory {
     @Override
     public String toString() {
         if (directory == null) {
-            return TGS_StringUtils.concat(port != null ? port.toString() : parent.toString());
+            return TGS_StringUtils.cmn().concat(port != null ? port.toString() : parent.toString());
         }
-        return TGS_StringUtils.concat(port != null ? port.toString() : parent.toString(), directory, "/");
+        return TGS_StringUtils.cmn().concat(port != null ? port.toString() : parent.toString(), directory, "/");
     }
 
     public TGS_UrlBuilderDirectory directory(CharSequence directory) {

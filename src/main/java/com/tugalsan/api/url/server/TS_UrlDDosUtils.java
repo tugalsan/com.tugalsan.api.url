@@ -17,7 +17,7 @@ public class TS_UrlDDosUtils {
     /*
     
     public static void attackOnce(String urlString) {
-        attackOnce(urlString, TGS_StringUtils.concat("p=", String.valueOf(TS_RandomUtils.nextInt(0, Integer.MAX_VALUE))));
+        attackOnce(urlString, TGS_StringUtils.cmn().concat("p=", String.valueOf(TS_RandomUtils.nextInt(0, Integer.MAX_VALUE))));
     }
 
     public static void attackOnce(String urlString, String paramPair) {

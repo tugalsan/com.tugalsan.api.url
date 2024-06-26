@@ -24,11 +24,11 @@ public class TS_UrlServletRequestUtils {
         var paramNameStr = paramNameAsIs.toString();
         var paramVal = rq.getParameter(paramNameStr);
         if (!dechiperVal2Readable) {
-            return TGS_StringUtils.toNullIfEmpty(paramVal);
+            return TGS_StringUtils.cmn().toNullIfEmpty(paramVal);
         }
         var paramValReadable = TS_UrlQueryUtils.toParamValueReadable(paramVal);
 //        d.ce("getParameterValue", "paramNameStr/paramVal/paramValReadable", paramNameStr, paramVal, paramValReadable);
-        return TGS_StringUtils.toNullIfEmpty(paramValReadable);
+        return TGS_StringUtils.cmn().toNullIfEmpty(paramValReadable);
     }
 
     public static List<String> getParameterNames(HttpServletRequest rq) {

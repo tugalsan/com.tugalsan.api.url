@@ -17,7 +17,7 @@ public class TS_UrlUtils {
 
     public static String mime(TGS_Url img) {
         var typ = URLConnection.getFileNameMap().getContentTypeFor(TGS_UrlUtils.getFileNameFull(img));
-        if (TGS_StringUtils.isPresent(typ) && typ.length() < 5) {
+        if (TGS_StringUtils.cmn().isPresent(typ) && typ.length() < 5) {
             return typ;
         }
         return TGS_UnSafe.call(() -> {

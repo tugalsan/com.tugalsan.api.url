@@ -33,13 +33,13 @@ public class TGS_UrlBuilderParameter {
             if (paramName == null) {
                 return fileOrServlet.toString();
             } else {
-                return TGS_StringUtils.concat(fileOrServlet.toString(), "?", paramName, "=", paramValue);
+                return TGS_StringUtils.cmn().concat(fileOrServlet.toString(), "?", paramName, "=", paramValue);
             }
         }
         if (paramName == null) {
             return previous.toString();
         } else {
-            return TGS_StringUtils.concat(previous.toString(), "&", paramName, "=", paramValue);
+            return TGS_StringUtils.cmn().concat(previous.toString(), "&", paramName, "=", paramValue);
         }
     }
 

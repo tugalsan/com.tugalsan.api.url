@@ -26,7 +26,7 @@ public class TGS_UrlParserParamUrlSafe implements Serializable {
 
     @Override
     public String toString() {
-        if (TGS_StringUtils.isNullOrEmpty(name) || TGS_StringUtils.isNullOrEmpty(valueSafe)) {
+        if (TGS_StringUtils.cmn().isNullOrEmpty(name) || TGS_StringUtils.cmn().isNullOrEmpty(valueSafe)) {
             return "";
         }
         return name + "=" + valueSafe;

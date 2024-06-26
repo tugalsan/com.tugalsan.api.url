@@ -15,7 +15,7 @@ public class TGS_UrlBuilderPort {
 
     @Override
     public String toString() {
-        return TGS_StringUtils.concat(protocol, "://", domain, (port == null ? "" : (":" + port)), "/");
+        return TGS_StringUtils.cmn().concat(protocol, "://", domain, (port == null ? "" : (":" + port)), "/");
     }
 
     public TGS_UrlBuilderDirectory directory(CharSequence directory) {

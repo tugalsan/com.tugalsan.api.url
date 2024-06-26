@@ -44,6 +44,6 @@ public class TGS_UrlParserAnchor implements Serializable {
 //        System.out.println("pa: " + pa);
 //        System.out.println("qu: " + qu);
 //        System.out.println("an: " + an);
-        return TGS_StringUtils.concat(pr, ho, pa, qu, an);
+        return TGS_StringUtils.cmn().concat(pr, ho, pa, qu, an);
     }
 }

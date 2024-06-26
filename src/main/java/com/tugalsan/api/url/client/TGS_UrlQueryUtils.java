@@ -24,7 +24,7 @@ public class TGS_UrlQueryUtils {
     //BASE64 A–Z, a–z, 0–9, +, / and =
     //URL SAFE -._~
     public static String readable_2_Param64UrlSafe(CharSequence paramValueReadable) {
-        if (TGS_StringUtils.isNullOrEmpty(paramValueReadable)) {
+        if (TGS_StringUtils.cmn().isNullOrEmpty(paramValueReadable)) {
             return null;
         }
         return TGS_CryptUtils.encrypt64(paramValueReadable)
@@ -34,7 +34,7 @@ public class TGS_UrlQueryUtils {
     }
 
     public static String param64UrlSafe_2_readable(CharSequence base64UrlSafe) {
-        if (TGS_StringUtils.isNullOrEmpty(base64UrlSafe)) {
+        if (TGS_StringUtils.cmn().isNullOrEmpty(base64UrlSafe)) {
             return null;
         }
         return TGS_CryptUtils.decrypt64(base64UrlSafe.toString()

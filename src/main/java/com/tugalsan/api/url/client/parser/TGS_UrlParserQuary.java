@@ -54,10 +54,10 @@ public class TGS_UrlParserQuary implements Serializable {
     }
 
     public TGS_UrlParserQuary setParameterValueUrlSafe(CharSequence name, CharSequence valueUrlSafe) {
-        if (TGS_StringUtils.isNullOrEmpty(name)) {
+        if (TGS_StringUtils.cmn().isNullOrEmpty(name)) {
             return this;
         }
-        if (TGS_StringUtils.isNullOrEmpty(valueUrlSafe)) {
+        if (TGS_StringUtils.cmn().isNullOrEmpty(valueUrlSafe)) {
             delParameterByName(name);
             return this;
         }
@@ -97,6 +97,6 @@ public class TGS_UrlParserQuary implements Serializable {
 //        System.out.println("ho  : " + ho);
 //        System.out.println("pa: " + pa);
 //        System.out.println("qu: " + qu);
-        return TGS_StringUtils.concat(pr, ho, pa, qu);
+        return TGS_StringUtils.cmn().concat(pr, ho, pa, qu);
     }
 }

@@ -90,6 +90,6 @@ public class TGS_UrlParserPath implements Serializable {
         var pr = protocol.toString();
         var ho = host.toString();
         var pa = toString();
-        return TGS_StringUtils.concat(pr, ho, pa);
+        return TGS_StringUtils.cmn().concat(pr, ho, pa);
     }
 }

@@ -57,7 +57,7 @@ public class TGS_UrlUtils {
             return false;
         }
         var str = url.toString();
-        if (TGS_StringUtils.isNullOrEmpty(str)) {
+        if (TGS_StringUtils.cmn().isNullOrEmpty(str)) {
             return false;
         }
         return str.contains("../") || str.contains("..\\") || str.startsWith("/") || str.startsWith("\\");
@@ -70,7 +70,7 @@ public class TGS_UrlUtils {
     public static String constructURL(TGS_Url urlWithoutQuery, List<TGS_Tuple2<String, String>> parametersSafe) {
         var sb = new StringBuilder(urlWithoutQuery.toString());
         sb.append("?");
-        parametersSafe.stream().forEachOrdered(pair -> sb.append(TGS_StringUtils.concat(pair.value0, "=", pair.value1, "&")));
+        parametersSafe.stream().forEachOrdered(pair -> sb.append(TGS_StringUtils.cmn().concat(pair.value0, "=", pair.value1, "&")));
         return sb.substring(0, sb.length() - 1);
     }
 
