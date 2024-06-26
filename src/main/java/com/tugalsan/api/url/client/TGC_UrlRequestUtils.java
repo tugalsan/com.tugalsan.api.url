@@ -1,7 +1,7 @@
 package com.tugalsan.api.url.client;
 
 import com.google.gwt.http.client.*;
-import com.tugalsan.api.callable.client.TGS_CallableType1Void;
+import com.tugalsan.api.callable.client.TGS_CallableType1_Run;
 
 import com.tugalsan.api.log.client.TGC_Log;
 import com.tugalsan.api.unsafe.client.*;
@@ -14,7 +14,7 @@ public class TGC_UrlRequestUtils {
         return 200;
     }
 
-    public static void get(TGS_Url url, TGS_CallableType1Void<Response> onResponse) { 
+    public static void get(TGS_Url url, TGS_CallableType1_Run<Response> onResponse) { 
         TGS_UnSafe.run(() -> {
             var builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url.toString()));
             builder.sendRequest(null, new RequestCallback() {
@@ -41,7 +41,7 @@ public class TGC_UrlRequestUtils {
         });
     }
 
-    public static void post(TGS_Url url, CharSequence requestData, TGS_CallableType1Void<Response> onResponse) {
+    public static void post(TGS_Url url, CharSequence requestData, TGS_CallableType1_Run<Response> onResponse) {
         TGS_UnSafe.run(() -> {
             var builder = new RequestBuilder(RequestBuilder.POST, URL.encode(url.toString()));
             builder.setHeader("Content-type", "application/x-www-form-urlencoded");
