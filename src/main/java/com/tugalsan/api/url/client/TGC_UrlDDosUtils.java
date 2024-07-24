@@ -5,8 +5,8 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
+import com.tugalsan.api.function.client.TGS_Func;
 import com.tugalsan.api.random.client.TGS_RandomUtils;
-import com.tugalsan.api.stream.client.TGS_StreamUtils;
 import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import com.tugalsan.api.url.client.parser.TGS_UrlParser;
 
@@ -28,6 +28,6 @@ public class TGC_UrlDDosUtils {
                 public void onResponseReceived(Request request, Response response) {
                 }
             });
-        }, e -> TGS_StreamUtils.runNothing());
+        }, e -> TGS_Func.empty.run());
     }
 }
