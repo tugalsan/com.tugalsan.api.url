@@ -9,6 +9,7 @@ import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.string.client.TGS_StringUtils;
 import com.tugalsan.api.tuple.client.*;
+import com.tugalsan.api.union.client.TGS_UnionExcuse;
 import com.tugalsan.api.unsafe.client.*;
 
 public class TS_UrlUtils {
@@ -110,7 +111,7 @@ public class TS_UrlUtils {
         return TGS_UnSafe.call(() -> TGS_Url.of(file.toUri().toURL().toExternalForm()), exception -> null);
     }
 
-    public static TGS_Tuple2<Path, Exception> toPathOrError(TGS_Url url) {
+    public static TGS_UnionExcuse<Path> toPath(TGS_Url url) {
         return TS_PathUtils.toPathOrError(url.toString());
     }
 
