@@ -112,7 +112,7 @@ public class TS_UrlUtils {
     }
 
     public static TGS_UnionExcuse<Path> toPath(TGS_Url url) {
-        return TS_PathUtils.toPathOrError(url.toString());
+        return TS_PathUtils.toPath(url.toString());
     }
 
     public static boolean isUrl(CharSequence str) {
