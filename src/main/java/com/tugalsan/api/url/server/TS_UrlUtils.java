@@ -16,10 +16,12 @@ public class TS_UrlUtils {
     final private static TS_Log d = TS_Log.of(TS_UrlUtils.class);
 
     public static TGS_UnionExcuse<String> mime(TGS_Url urlFile) {
-        var typeByFileNameMap = TGS_UnSafe.call(() -> {
+        String typeByFileNameMap = TGS_UnSafe.call(() -> {
             var type = URLConnection.getFileNameMap().getContentTypeFor(TGS_UrlUtils.getFileNameFull(urlFile));
             if (TGS_StringUtils.cmn().isPresent(type) && type.length() < 5) {
                 return type;
+            } else {
+                return null;
             }
         }, e -> null);
         if (typeByFileNameMap != null) {
