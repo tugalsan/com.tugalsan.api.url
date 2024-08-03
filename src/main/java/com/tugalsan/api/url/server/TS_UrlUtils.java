@@ -17,7 +17,7 @@ public class TS_UrlUtils {
 
     public static TGS_UnionExcuse<String> mime(TGS_Url urlFile) {
         String typeByFileNameMap = TGS_UnSafe.call(() -> {
-            var type = URLConnection.getFileNameMap().getContentTypeFor(TGS_UrlUtils.getFileNameFull(urlFile));
+            var type = URLConnection.getFileNameMap().getContentTypeFor(TGS_UrlUtils.getFileNameFull(urlFile)).replace(";charset=UTF-8", "");
             if (TGS_StringUtils.cmn().isPresent(type) && type.length() < 5) {
                 return type;
             } else {
