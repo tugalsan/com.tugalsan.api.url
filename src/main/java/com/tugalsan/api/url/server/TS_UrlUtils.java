@@ -6,37 +6,45 @@ import java.nio.file.*;
 import javax.servlet.http.*;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
+import com.tugalsan.api.function.client.TGS_Func_OutTyped_In1;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.string.client.TGS_StringUtils;
 import com.tugalsan.api.union.client.TGS_UnionExcuse;
 import com.tugalsan.api.unsafe.client.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class TS_UrlUtils {
 
     final private static TS_Log d = TS_Log.of(TS_UrlUtils.class);
 
     public static TGS_UnionExcuse<String> mime(TGS_Url urlFile) {
-        String typeByFileNameMap = TGS_UnSafe.call(() -> {
-            var type = URLConnection.getFileNameMap().getContentTypeFor(TGS_UrlUtils.getFileNameFull(urlFile)).replace(";charset=UTF-8", "");
-            if (TGS_StringUtils.cmn().isPresent(type) && type.length() < 5) {
-                return type;
-            } else {
-                return null;
+        {
+            var typeByFileNameMap = TGS_UnSafe.call(() -> {
+                var type = URLConnection.getFileNameMap().getContentTypeFor(TGS_UrlUtils.getFileNameFull(urlFile)).replace(";charset=UTF-8", "");
+                return TGS_StringUtils.cmn().isPresent(type) && type.length() < 5 ? type : null;
+            }, e -> null);
+            if (typeByFileNameMap != null) {
+                return TGS_UnionExcuse.of(typeByFileNameMap);
             }
-        }, e -> null);
-        if (typeByFileNameMap != null) {
-            return TGS_UnionExcuse.of(typeByFileNameMap);
         }
-        var typeByURLConnection = TGS_UnSafe.call(() -> {
-            var url = new URI(urlFile.url.toString()).toURL();
-            return url.openConnection().getContentType().replace(";charset=UTF-8", "");
-        }, e -> null);
-        if (typeByURLConnection == null) {
-            return TGS_UnionExcuse.ofExcuse(d.className, "mime", "Cannot detect type for " + urlFile);
+        {
+            var typeByURLConnection = TGS_UnSafe.call(() -> {
+                var url = new URI(urlFile.url.toString()).toURL();
+                return url.openConnection().getContentType().replace(";charset=UTF-8", "");
+            }, e -> null);
+            if (typeByURLConnection != null) {
+                return TGS_UnionExcuse.of(typeByURLConnection);
+            }
         }
-        return TGS_UnionExcuse.of(typeByURLConnection);
+        {
+            var typeByAddon = mime_addon.stream().map(addon -> addon.call(urlFile)).filter(type -> type != null).findAny().orElse(null);
+            if (typeByAddon != null) {
+                return TGS_UnionExcuse.of(typeByAddon);
+            }
+        }
+        return TGS_UnionExcuse.ofExcuse(d.className, "mime", "Cannot detect type for " + urlFile);
     }
-//    final private static TS_Log d = TS_Log.of(TS_UrlUtils.class);
+    final public static ConcurrentLinkedQueue<TGS_Func_OutTyped_In1<String, TGS_Url>> mime_addon = new ConcurrentLinkedQueue();
 
     public static TGS_Url toUrl(HttpServletRequest rq) {
         var protocol = rq.getScheme();             // http
