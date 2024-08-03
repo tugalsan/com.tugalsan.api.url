@@ -15,21 +15,24 @@ public class TS_UrlUtils {
 
     final private static TS_Log d = TS_Log.of(TS_UrlUtils.class);
 
-    public static String mime(TGS_Url img) {
-        var wrap = new Object() {
-            String type = "null";
-        };
-        return TGS_UnSafe.call(() -> {
-            wrap.type = URLConnection.getFileNameMap().getContentTypeFor(TGS_UrlUtils.getFileNameFull(img));
-            if (TGS_StringUtils.cmn().isPresent(wrap.type) && wrap.type.length() < 5) {
-                return wrap.type;
+    public static TGS_UnionExcuse<String> mime(TGS_Url urlFile) {
+        var typeByFileNameMap = TGS_UnSafe.call(() -> {
+            var type = URLConnection.getFileNameMap().getContentTypeFor(TGS_UrlUtils.getFileNameFull(urlFile));
+            if (TGS_StringUtils.cmn().isPresent(type) && type.length() < 5) {
+                return type;
             }
-            var url = new URI(img.url.toString()).toURL();
+        }, e -> null);
+        if (typeByFileNameMap != null) {
+            return TGS_UnionExcuse.of(typeByFileNameMap);
+        }
+        var typeByURLConnection = TGS_UnSafe.call(() -> {
+            var url = new URI(urlFile.url.toString()).toURL();
             return url.openConnection().getContentType().replace(";charset=UTF-8", "");
-        }, e -> {
-            d.ct("mime(TGS_Url img)", e);
-            return wrap.type;
-        });
+        }, e -> null);
+        if (typeByURLConnection == null) {
+            return TGS_UnionExcuse.ofExcuse(d.className, "mime", "Cannot detect type for " + urlFile);
+        }
+        return TGS_UnionExcuse.of(typeByURLConnection);
     }
 //    final private static TS_Log d = TS_Log.of(TS_UrlUtils.class);
 
