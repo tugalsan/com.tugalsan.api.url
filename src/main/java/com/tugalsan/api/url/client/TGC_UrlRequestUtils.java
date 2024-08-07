@@ -14,57 +14,57 @@ public class TGC_UrlRequestUtils {
         return 200;
     }
 
-    public static void get(TGS_Url url, TGS_Func_In1<Response> onResponse) { 
+    public static void async_get(TGS_Url url, TGS_Func_In1<Response> onResponse) { 
         TGS_UnSafe.run(() -> {
             var builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url.toString()));
             builder.sendRequest(null, new RequestCallback() {
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    d.ce("get.onError", "ERROR: Couldn't connect to server (could be timeout, SOP violation, etc.");
+                    d.ce("async_get.onError", "ERROR: Couldn't connect to server (could be timeout, SOP violation, etc.");
                     onResponse.run(null);
                 }
 
                 @Override
                 public void onResponseReceived(Request request, Response response) {
                     if (200 == response.getStatusCode()) {
-                        d.ci("get.onResponseReceived", "ok");
+                        d.ci("async_get.onResponseReceived", "ok");
                     } else {
-                        d.ce("get.onResponseReceived", "status", response.getStatusCode(), response.getStatusText());
+                        d.ce("async_get.onResponseReceived", "status", response.getStatusCode(), response.getStatusText());
                     }
                     onResponse.run(response);
                 }
             });
         }, e -> {
-            d.ce("get.onError", "ERROR: Couldn't connect to server");
-            d.ce("get.onError", e);
+            d.ce("async_get.onError", "ERROR: Couldn't connect to server");
+            d.ce("async_get.onError", e);
             onResponse.run(null);
         });
     }
 
-    public static void post(TGS_Url url, CharSequence requestData, TGS_Func_In1<Response> onResponse) {
+    public static void async_post(TGS_Url url, CharSequence requestData, TGS_Func_In1<Response> onResponse) {
         TGS_UnSafe.run(() -> {
             var builder = new RequestBuilder(RequestBuilder.POST, URL.encode(url.toString()));
             builder.setHeader("Content-type", "application/x-www-form-urlencoded");
             builder.sendRequest(requestData.toString(), new RequestCallback() {
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    d.ce("post.onError", "ERROR: Couldn't connect to server (could be timeout, SOP violation, etc.");
+                    d.ce("async_post.onError", "ERROR: Couldn't connect to server (could be timeout, SOP violation, etc.");
                     onResponse.run(null);
                 }
 
                 @Override
                 public void onResponseReceived(Request request, Response response) {
                     if (200 == response.getStatusCode()) {
-                        d.ci("post.onError", "ok");
+                        d.ci("async_post.onError", "ok");
                     } else {
-                        d.ce("post.onResponseReceived", "status", response.getStatusCode(), response.getStatusText());
+                        d.ce("async_post.onResponseReceived", "status", response.getStatusCode(), response.getStatusText());
                     }
                     onResponse.run(response);
                 }
             });
         }, e -> {
-            d.ce("post.onError", "ERROR: Couldn't connect to server");
-            d.ce("post.onError", e);
+            d.ce("async_post.onError", "ERROR: Couldn't connect to server");
+            d.ce("async_post.onError", e);
             onResponse.run(null);
         });
     }
