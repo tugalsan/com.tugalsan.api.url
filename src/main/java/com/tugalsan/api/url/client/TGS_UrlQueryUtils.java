@@ -28,9 +28,9 @@ public class TGS_UrlQueryUtils {
             return null;
         }
         return TGS_CryptUtils.encrypt64(paramValueReadable)
-                .replace("+", String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(0)))
-                .replace("/", String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(1)))
-                .replace("=", String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(2)));
+                .replace("+", String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(0)))//_
+                .replace("/", String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(1)))//-
+                .replace("=", String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(2)));//.
     }
 
     public static String param64UrlSafe_2_readable(CharSequence base64UrlSafe) {
@@ -38,8 +38,8 @@ public class TGS_UrlQueryUtils {
             return null;
         }
         return TGS_CryptUtils.decrypt64(base64UrlSafe.toString()
-                .replace(String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(0)), "+")
-                .replace(String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(1)), "/")
-                .replace(String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(2)), "="));
+                .replace(String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(0)), "+")//_
+                .replace(String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(1)), "/")//-
+                .replace(String.valueOf(TGS_UrlUtils.SAFE_CHARS_ALPHA().charAt(2)), "="));//.
     }
 }
