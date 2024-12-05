@@ -9,9 +9,9 @@ import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.function.client.TGS_Func_OutTyped_In1;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.string.client.TGS_StringUtils;
+import com.tugalsan.api.thread.server.sync.TS_ThreadSyncLst;
 import com.tugalsan.api.union.client.TGS_UnionExcuse;
 import com.tugalsan.api.unsafe.client.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class TS_UrlUtils {
 
@@ -44,7 +44,7 @@ public class TS_UrlUtils {
         }
         return TGS_UnionExcuse.ofExcuse(d.className, "mime", "Cannot detect type for " + urlFile);
     }
-    final public static ConcurrentLinkedQueue<TGS_Func_OutTyped_In1<String, TGS_Url>> mime_addon = new ConcurrentLinkedQueue();
+    final public static TS_ThreadSyncLst<TGS_Func_OutTyped_In1<String, TGS_Url>> mime_addon = TS_ThreadSyncLst.ofSlowWrite();
 
     public static TGS_Url toUrl(HttpServletRequest rq) {
         var protocol = rq.getScheme();             // http
