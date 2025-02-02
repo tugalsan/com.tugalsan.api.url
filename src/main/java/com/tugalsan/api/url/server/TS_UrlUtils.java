@@ -122,8 +122,11 @@ public class TS_UrlUtils {
         return TGS_UnSafe.call(() -> URI.create(url.toString()).toURL().openConnection().getOutputStream());
     }
 
-    public static TGS_Url toUrl(Path file) {
-        return TGS_UnSafe.call(() -> TGS_Url.of(file.toUri().toURL().toExternalForm()), exception -> null);
+    public static TGS_UnionExcuse<TGS_Url> toUrl(Path file) {
+        return TGS_UnSafe.call(() -> {
+            var url = TGS_Url.of(file.toUri().toURL().toExternalForm());
+            return TGS_UnionExcuse.of(url);
+        }, e -> TGS_UnionExcuse.ofExcuse(e));
     }
 
     public static TGS_UnionExcuse<Path> toPath(TGS_Url url) {
