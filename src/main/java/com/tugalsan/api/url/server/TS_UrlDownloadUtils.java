@@ -37,7 +37,7 @@ public class TS_UrlDownloadUtils {
 
                 d.ce("main", "time", url, "TIME_FETCH_FAILED");
                 if (!TS_FileUtils.isExistFile(fileLoc)) {
-                    d.cr("main", url, fileLoc);
+                    d.ci("main", url, fileLoc);
                     var u_download = TS_UrlDownloadUtils.toFile(url, fileLoc, timeout);
                     if (u_download.isExcuse()) {
                         d.ce("main", url, "u_download", u_download.excuse().getMessage());
@@ -46,7 +46,7 @@ public class TS_UrlDownloadUtils {
                     TS_FileUtils.setTimeCreationTime(fileLoc, now);
                     TS_FileUtils.setTimeAccessTime(fileLoc, now);
                     TS_FileUtils.setTimeLastModified(fileLoc, now);
-                    d.cr("main", url, "NOT_EXISTS", "DOWNLOADED");
+                    d.ci("main", url, "NOT_EXISTS", "DOWNLOADED");
                     return;
                 }
 
@@ -69,7 +69,7 @@ public class TS_UrlDownloadUtils {
                     return;
                 }
                 if (u_same.value()) {
-                    d.cr("main", url, "BY CONTENT", "ALREADY EXISTS");
+                    d.ci("main", url, "BY CONTENT", "ALREADY EXISTS");
                     TS_FileUtils.deleteFileIfExists(u_fileTmp.value());
                     return;
                 } else {
@@ -83,12 +83,12 @@ public class TS_UrlDownloadUtils {
             }
 
             //FASTER IMPL
-            d.cr("main", url, "u_time", u_time.value().toString_YYYY_MM_DD_HH_MM_SS());
+            d.ci("main", url, "u_time", u_time.value().toString_YYYY_MM_DD_HH_MM_SS());
             if (TS_FileUtils.isExistFile(fileLoc)) {
                 var f_time = TS_FileUtils.getTimeLastModified(fileLoc);
-                d.cr("main", url, "f_time", f_time.toString_YYYY_MM_DD_HH_MM_SS());
+                d.ci("main", url, "f_time", f_time.toString_YYYY_MM_DD_HH_MM_SS());
                 if (f_time.equals(u_time.value())) {
-                    d.cr("main", url, "BY TIME", "ALREADY EXISTS");
+                    d.ci("main", url, "BY TIME", "ALREADY EXISTS");
                 } else {
                     d.ce("main", url, "BY TIME", "NEW FOUND");
                     var bakName = TS_FileUtils.getNameLabel(fileLoc) + "-"
@@ -116,7 +116,7 @@ public class TS_UrlDownloadUtils {
                 }
                 return;
             }
-            d.cr("main", url, fileLoc);
+            d.ci("main", url, fileLoc);
             var u_download = TS_UrlDownloadUtils.toFile(url, fileLoc, timeout);
             if (u_download.isExcuse()) {
                 d.ce("main", url, "u_download", u_download.excuse().getMessage());
@@ -125,7 +125,7 @@ public class TS_UrlDownloadUtils {
             TS_FileUtils.setTimeCreationTime(fileLoc, u_time.value());
             TS_FileUtils.setTimeAccessTime(fileLoc, u_time.value());
             TS_FileUtils.setTimeLastModified(fileLoc, u_time.value());
-            d.cr("main", url, "DOWNLOADED");
+            d.ci("main", url, "DOWNLOADED");
         });
     }
 
@@ -145,10 +145,10 @@ public class TS_UrlDownloadUtils {
             if (lngLastModified == 0) {
                 TGS_UnSafe.thrw(d.className, "getTimeLastModified_withoutDownloading", "(HttpURLConnection) url.openConnection().getLastModified() return 0");
             }
-            d.cr("getTimeLastModified_withoutDownloading", "lngLastModified", lngLastModified);
+            d.ci("getTimeLastModified_withoutDownloading", "lngLastModified", lngLastModified);
             var zdtLastModified = ZonedDateTime.ofInstant(Instant.ofEpochMilli(lngLastModified), ZoneId.of("GMT"));
             var millisLastModified = zdtLastModified.toInstant().toEpochMilli();
-            d.cr("getTimeLastModified_withoutDownloading", "millisLastModified", millisLastModified);
+            d.ci("getTimeLastModified_withoutDownloading", "millisLastModified", millisLastModified);
             var timeLastModified = TGS_Time.ofMillis(millisLastModified);
             return TGS_UnionExcuse.of(timeLastModified);
         }, e -> TGS_UnionExcuse.ofExcuse(e));
