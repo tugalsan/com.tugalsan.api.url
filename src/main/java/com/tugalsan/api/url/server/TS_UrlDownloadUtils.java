@@ -1,6 +1,7 @@
 package com.tugalsan.api.url.server;
 
 import com.tugalsan.api.crypto.client.TGS_CryptUtils;
+import com.tugalsan.api.file.client.TGS_FileUtilsTur;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.*;
@@ -13,14 +14,120 @@ import com.tugalsan.api.time.client.TGS_Time;
 import com.tugalsan.api.union.client.TGS_UnionExcuse;
 import com.tugalsan.api.union.client.TGS_UnionExcuseVoid;
 import com.tugalsan.api.unsafe.client.*;
+import com.tugalsan.api.url.client.parser.TGS_UrlParser;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 public class TS_UrlDownloadUtils {
 
     final public static TS_Log d = TS_Log.of(false, TS_UrlDownloadUtils.class);
+
+    public static void toFolder(List<TGS_Url> urls, Path destFolder, Duration timeout) {
+        urls.parallelStream().forEach(url -> {
+            var parser = TGS_UrlParser.of(url);
+            var fileLoc = destFolder.resolve(TGS_FileUtilsTur.toSafe(parser.toString()));
+            var u_time = TS_UrlDownloadUtils.getTimeLastModified_withoutDownloading(url);
+
+            //SLOWER IMPL
+            if (u_time.isExcuse()) {
+                var now = TGS_Time.of();
+
+                d.ce("main", "time", url, "TIME_FETCH_FAILED");
+                if (!TS_FileUtils.isExistFile(fileLoc)) {
+                    d.cr("main", url, fileLoc);
+                    var u_download = TS_UrlDownloadUtils.toFile(url, fileLoc, timeout);
+                    if (u_download.isExcuse()) {
+                        d.ce("main", url, "u_download", u_download.excuse().getMessage());
+                        return;
+                    }
+                    TS_FileUtils.setTimeCreationTime(fileLoc, now);
+                    TS_FileUtils.setTimeAccessTime(fileLoc, now);
+                    TS_FileUtils.setTimeLastModified(fileLoc, now);
+                    d.cr("main", url, "NOT_EXISTS", "DOWNLOADED");
+                    return;
+                }
+
+                var u_fileTmp = TS_FileUtils.createFileTemp();
+                if (u_fileTmp.isExcuse()) {
+                    d.ce("main", url, "u_fileTmp", u_fileTmp.excuse().getMessage());
+                    return;
+                }
+                var u_download = TS_UrlDownloadUtils.toFile(url, u_fileTmp.value(), timeout);
+                if (u_download.isExcuse()) {
+                    d.ce("main", url, "u_download", u_download.excuse().getMessage());
+                    return;
+                }
+                TS_FileUtils.setTimeCreationTime(u_fileTmp.value(), now);
+                TS_FileUtils.setTimeAccessTime(u_fileTmp.value(), now);
+                TS_FileUtils.setTimeLastModified(u_fileTmp.value(), now);
+                var u_same = TS_FileUtils.hasSameContent(u_fileTmp.value(), fileLoc, true);
+                if (u_same.isExcuse()) {
+                    d.ce("main", "u_same", u_same.excuse().getMessage());
+                    return;
+                }
+                if (u_same.value()) {
+                    d.cr("main", url, "BY CONTENT", "ALREADY EXISTS");
+                    TS_FileUtils.deleteFileIfExists(u_fileTmp.value());
+                    return;
+                } else {
+                    TS_FileUtils.rename(fileLoc, TS_FileUtils.getNameLabel(fileLoc) + "-"
+                            + now.toString_YYYYMMDD_HHMMSS() + "."
+                            + TS_FileUtils.getNameType(fileLoc));
+                    TS_FileUtils.moveAs(u_fileTmp.value(), fileLoc, false);
+                    d.ce("main", url, "BY CONTENT", "NEW FOUND");
+                }
+                return;
+            }
+
+            //FASTER IMPL
+            d.cr("main", url, "u_time", u_time.value().toString_YYYY_MM_DD_HH_MM_SS());
+            if (TS_FileUtils.isExistFile(fileLoc)) {
+                var f_time = TS_FileUtils.getTimeLastModified(fileLoc);
+                d.cr("main", url, "f_time", f_time.toString_YYYY_MM_DD_HH_MM_SS());
+                if (f_time.equals(u_time.value())) {
+                    d.cr("main", url, "BY TIME", "ALREADY EXISTS");
+                } else {
+                    d.ce("main", url, "BY TIME", "NEW FOUND");
+                    var bakName = TS_FileUtils.getNameLabel(fileLoc) + "-"
+                            + TS_FileUtils.getTimeLastModified(fileLoc) + "."
+                            + TS_FileUtils.getNameType(fileLoc);
+                    TS_FileUtils.rename(fileLoc, bakName);
+                    var u_download = TS_UrlDownloadUtils.toFile(url, fileLoc, timeout);
+                    if (u_download.isExcuse()) {
+                        d.ce("main", url, "u_download", u_download.excuse().getMessage());
+                        return;
+                    }
+                    TS_FileUtils.setTimeCreationTime(fileLoc, u_time.value());
+                    TS_FileUtils.setTimeAccessTime(fileLoc, u_time.value());
+                    TS_FileUtils.setTimeLastModified(fileLoc, u_time.value());
+                    d.ce("main", url, "BY TIME", "NEW FOUND", "DOWNLOADED");
+                    var u_same = TS_FileUtils.hasSameContent(fileLoc, fileLoc.resolveSibling(bakName), true);
+                    if (u_same.isExcuse()) {
+                        d.ce("main", "u_same", u_same.excuse().getMessage());
+                        return;
+                    }
+                    if (u_same.value()) {
+                        TS_FileUtils.deleteFileIfExists(fileLoc.resolveSibling(bakName));
+                        d.ce("main", url, "BY TIME", "NEW FOUND", "DOWNLOADED", "AND DELETED");
+                    }
+                }
+                return;
+            }
+            d.cr("main", url, fileLoc);
+            var u_download = TS_UrlDownloadUtils.toFile(url, fileLoc, timeout);
+            if (u_download.isExcuse()) {
+                d.ce("main", url, "u_download", u_download.excuse().getMessage());
+                return;
+            }
+            TS_FileUtils.setTimeCreationTime(fileLoc, u_time.value());
+            TS_FileUtils.setTimeAccessTime(fileLoc, u_time.value());
+            TS_FileUtils.setTimeLastModified(fileLoc, u_time.value());
+            d.cr("main", url, "DOWNLOADED");
+        });
+    }
 
     public static TGS_UnionExcuse<TGS_Time> getTimeLastModified_withoutDownloading(TGS_Url sourceURL) {
         return TGS_UnSafe.call(() -> {
