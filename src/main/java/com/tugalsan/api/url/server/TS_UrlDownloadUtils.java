@@ -25,11 +25,23 @@ public class TS_UrlDownloadUtils {
     public static TGS_UnionExcuse<TGS_Time> getTimeLastModified_withoutDownloading(TGS_Url sourceURL) {
         return TGS_UnSafe.call(() -> {
             var url = new URI(sourceURL.toString()).toURL();
-            var connection = (HttpURLConnection) url.openConnection();
-            var lngLastModified = connection.getLastModified();
-            connection.disconnect();
+            HttpURLConnection connection = null;
+            long lngLastModified;
+            try {
+                connection = (HttpURLConnection) url.openConnection();
+                lngLastModified = connection.getLastModified();
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+            if (lngLastModified == 0) {
+                TGS_UnSafe.thrw(d.className, "getTimeLastModified_withoutDownloading", "(HttpURLConnection) url.openConnection().getLastModified() return 0");
+            }
+            d.cr("getTimeLastModified_withoutDownloading", "lngLastModified", lngLastModified);
             var zdtLastModified = ZonedDateTime.ofInstant(Instant.ofEpochMilli(lngLastModified), ZoneId.of("GMT"));
             var millisLastModified = zdtLastModified.toInstant().toEpochMilli();
+            d.cr("getTimeLastModified_withoutDownloading", "millisLastModified", millisLastModified);
             var timeLastModified = TGS_Time.ofMillis(millisLastModified);
             return TGS_UnionExcuse.of(timeLastModified);
         }, e -> TGS_UnionExcuse.ofExcuse(e));
