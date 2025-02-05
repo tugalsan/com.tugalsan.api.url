@@ -9,13 +9,31 @@ import java.nio.file.*;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.log.server.*;
+import com.tugalsan.api.time.client.TGS_Time;
+import com.tugalsan.api.union.client.TGS_UnionExcuse;
 import com.tugalsan.api.union.client.TGS_UnionExcuseVoid;
 import com.tugalsan.api.unsafe.client.*;
 import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 public class TS_UrlDownloadUtils {
 
     final public static TS_Log d = TS_Log.of(false, TS_UrlDownloadUtils.class);
+
+    public static TGS_UnionExcuse<TGS_Time> getModifiedWithoutDownloading(TGS_Url sourceURL) {
+        return TGS_UnSafe.call(() -> {
+            var url = new URI(sourceURL.toString()).toURL();
+            var connection = (HttpURLConnection) url.openConnection();
+            var lngLastModified = connection.getLastModified();
+            connection.disconnect();
+            var zdtLastModified = ZonedDateTime.ofInstant(Instant.ofEpochMilli(lngLastModified), ZoneId.of("GMT"));
+            var millisLastModified = zdtLastModified.toInstant().toEpochMilli();
+            var timeLastModified = TGS_Time.ofMillis(millisLastModified);
+            return TGS_UnionExcuse.of(timeLastModified);
+        }, e -> TGS_UnionExcuse.ofExcuse(e));
+    }
 
     public static boolean isReacable(TGS_Url sourceURL) {
         return isReacable(sourceURL, 5);
@@ -54,7 +72,7 @@ public class TS_UrlDownloadUtils {
 //        httpClient.build();
 //        return TGS_UnSafe.call(() -> {
 //            var request = HttpRequest.newBuilder()
-////                    .timeout(Duration.ofMinutes(1))
+    ////                    .timeout(Duration.ofMinutes(1))
 //                    .GET()
 //                    .uri(URI.create("https://www.google.com"))
 //                    .build();
