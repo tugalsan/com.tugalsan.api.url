@@ -22,7 +22,7 @@ public class TS_UrlDownloadUtils {
 
     final public static TS_Log d = TS_Log.of(false, TS_UrlDownloadUtils.class);
 
-    public static TGS_UnionExcuse<TGS_Time> getModifiedWithoutDownloading(TGS_Url sourceURL) {
+    public static TGS_UnionExcuse<TGS_Time> getTimeLastModified_withoutDownloading(TGS_Url sourceURL) {
         return TGS_UnSafe.call(() -> {
             var url = new URI(sourceURL.toString()).toURL();
             var connection = (HttpURLConnection) url.openConnection();
