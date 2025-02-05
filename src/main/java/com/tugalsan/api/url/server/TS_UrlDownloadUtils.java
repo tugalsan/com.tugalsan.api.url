@@ -35,7 +35,7 @@ public class TS_UrlDownloadUtils {
             if (u_time.isExcuse()) {
                 var now = TGS_Time.of();
 
-                d.ce("main", "time", url, "TIME_FETCH_FAILED");
+                d.ci("main", "time", url, "TIME_FETCH_FAILED");
                 if (!TS_FileUtils.isExistFile(fileLoc)) {
                     d.ci("main", url, fileLoc);
                     var u_download = TS_UrlDownloadUtils.toFile(url, fileLoc, timeout);
