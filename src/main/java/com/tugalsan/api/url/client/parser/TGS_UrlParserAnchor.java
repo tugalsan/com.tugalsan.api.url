@@ -28,6 +28,10 @@ public class TGS_UrlParserAnchor implements Serializable {
     }
     public String value;
 
+    public void clear() {
+        value = null;
+    }
+
     @Override
     public String toString() {
         return value == null ? "" : ("#" + value);

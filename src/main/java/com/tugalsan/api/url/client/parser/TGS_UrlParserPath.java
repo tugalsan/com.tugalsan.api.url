@@ -66,6 +66,11 @@ public class TGS_UrlParserPath implements Serializable {
     public List<String> paths;
     public String fileOrServletName;
 
+    public void clear() {
+        fileOrServletName = null;
+        paths.clear();
+    }
+
     public String pathFirst_or_fileOrServletName() {
         //return paths.isEmpty() ? fileOrServletName : paths.getFirst();//GWT WONT LIKE U
         return paths.isEmpty() ? fileOrServletName : paths.get(0);

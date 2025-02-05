@@ -41,6 +41,10 @@ public class TGS_UrlParserQuary implements Serializable {
     }
     public List<TGS_UrlParserParamUrlSafe> params;
 
+    public void clear() {
+        params.clear();
+    }
+
     public TGS_UrlParserParamUrlSafe getParameterByName(CharSequence name) {
         return params.stream().filter(pair -> Objects.equals(pair.name, name)).findAny().orElse(null);
     }

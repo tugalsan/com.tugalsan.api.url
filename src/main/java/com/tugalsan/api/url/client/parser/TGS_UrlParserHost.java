@@ -27,7 +27,10 @@ public class TGS_UrlParserHost implements Serializable {
             idxHostEnd = urls.indexOf("?");
 //            System.out.println("idxHostEnd: " + idxHostEnd);
             if (idxHostEnd == -1) {
-                return;
+                idxHostEnd = urls.indexOf("#");
+                if (idxHostEnd == -1) {
+                    idxHostEnd = urls.length() - 1;//http://tugalsan.com
+                }
             }
         }
         domain = urls.substring(idxHostDomainStart, idxHostEnd + 1);
