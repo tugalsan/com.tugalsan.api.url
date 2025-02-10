@@ -5,9 +5,9 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
-import com.tugalsan.api.function.client.TGS_Func;
+import com.tugalsan.api.function.client.maythrow.uncheckedexceptions.TGS_FuncMTUCE;
 import com.tugalsan.api.random.client.TGS_RandomUtils;
-import com.tugalsan.api.unsafe.client.TGS_UnSafe;
+import com.tugalsan.api.function.client.maythrow.checkedexceptions.TGS_FuncMTCEUtils;
 import com.tugalsan.api.url.client.parser.TGS_UrlParser;
 
 public class TGC_UrlDDosUtils {
@@ -17,7 +17,7 @@ public class TGC_UrlDDosUtils {
         parser.quary.setParameterValueUrlSafe("p", TGS_UrlQueryUtils.readable_2_Param64UrlSafe(
                 String.valueOf(TGS_RandomUtils.nextInt(0, Integer.MAX_VALUE)))
         );
-        TGS_UnSafe.run(() -> {
+        TGS_FuncMTCEUtils.run(() -> {
             var builder = new RequestBuilder(RequestBuilder.GET, URL.encode(parser.toString()));
             builder.sendRequest(null, new RequestCallback() {
                 @Override
@@ -28,6 +28,6 @@ public class TGC_UrlDDosUtils {
                 public void onResponseReceived(Request request, Response response) {
                 }
             });
-        }, e -> TGS_Func.empty.run());
+        }, e -> TGS_FuncMTUCE.empty.run());
     }
 }

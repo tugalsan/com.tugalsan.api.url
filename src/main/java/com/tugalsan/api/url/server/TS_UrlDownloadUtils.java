@@ -9,11 +9,13 @@ import java.nio.channels.*;
 import java.nio.file.*;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
+import com.tugalsan.api.function.client.maythrow.checkedexceptions.TGS_FuncMTCEUtils;
+import com.tugalsan.api.function.client.maythrow.uncheckedexceptions.TGS_FuncMTUCEUtils;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.time.client.TGS_Time;
 import com.tugalsan.api.union.client.TGS_UnionExcuse;
 import com.tugalsan.api.union.client.TGS_UnionExcuseVoid;
-import com.tugalsan.api.unsafe.client.*;
+
 import com.tugalsan.api.url.client.parser.TGS_UrlParser;
 import java.time.Duration;
 import java.time.Instant;
@@ -130,7 +132,7 @@ public class TS_UrlDownloadUtils {
     }
 
     public static TGS_UnionExcuse<TGS_Time> getTimeLastModified_withoutDownloading(TGS_Url sourceURL) {
-        return TGS_UnSafe.call(() -> {
+        return TGS_FuncMTCEUtils.call(() -> {
             var url = new URI(sourceURL.toString()).toURL();
             HttpURLConnection connection = null;
             long lngLastModified;
@@ -143,7 +145,7 @@ public class TS_UrlDownloadUtils {
                 }
             }
             if (lngLastModified == 0) {
-                TGS_UnSafe.thrw(d.className, "getTimeLastModified_withoutDownloading", "(HttpURLConnection) url.openConnection().getLastModified() return 0");
+                TGS_FuncMTUCEUtils.thrw(d.className, "getTimeLastModified_withoutDownloading", "(HttpURLConnection) url.openConnection().getLastModified() return 0");
             }
             d.ci("getTimeLastModified_withoutDownloading", "lngLastModified", lngLastModified);
             var zdtLastModified = ZonedDateTime.ofInstant(Instant.ofEpochMilli(lngLastModified), ZoneId.of("GMT"));
@@ -160,7 +162,7 @@ public class TS_UrlDownloadUtils {
 
     public static boolean isReacable(TGS_Url sourceURL, int timeout) {
         var url = sourceURL.url.toString().replaceFirst("^https", "http");
-        var urll = TGS_UnSafe.call(() -> URI.create(url).toURL(), e -> null);
+        var urll = TGS_FuncMTCEUtils.call(() -> URI.create(url).toURL(), e -> null);
         if (urll == null) {
             return false;
         }
@@ -189,7 +191,7 @@ public class TS_UrlDownloadUtils {
 //            httpClient.connectTimeout(timeout.get());
 //        }
 //        httpClient.build();
-//        return TGS_UnSafe.call(() -> {
+//        return TGS_FuncMTCEUtils.call(() -> {
 //            var request = HttpRequest.newBuilder()
     ////                    .timeout(Duration.ofMinutes(1))
 //                    .GET()
@@ -242,7 +244,7 @@ public class TS_UrlDownloadUtils {
     }
 
     public static TGS_UnionExcuseVoid toFile(TGS_Url sourceURL, Path destFile, Duration timeout) {
-        return TGS_UnSafe.call(() -> {
+        return TGS_FuncMTCEUtils.call(() -> {
             var u = TS_FileUtils.deleteFileIfExists(destFile);
             if (u.isExcuse()) {
                 return u;
@@ -276,7 +278,7 @@ public class TS_UrlDownloadUtils {
     }
 
     public static byte[] toByteArray(TGS_Url sourceURL, Duration timeout) {
-        return TGS_UnSafe.call(() -> {
+        return TGS_FuncMTCEUtils.call(() -> {
             var url = URI.create(sourceURL.url.toString()).toURL();
             d.ci("toByteArray", "url", url);
             var con = url.openConnection();

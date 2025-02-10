@@ -1,10 +1,11 @@
 package com.tugalsan.api.url.client;
 
 import com.google.gwt.http.client.*;
-import com.tugalsan.api.function.client.TGS_Func_In1;
+import com.tugalsan.api.function.client.maythrow.checkedexceptions.TGS_FuncMTCEUtils;
+import com.tugalsan.api.function.client.maythrow.uncheckedexceptions.TGS_FuncMTUCE_In1;
 
 import com.tugalsan.api.log.client.TGC_Log;
-import com.tugalsan.api.unsafe.client.*;
+
 
 public class TGC_UrlRequestUtils {
 
@@ -14,8 +15,8 @@ public class TGC_UrlRequestUtils {
         return 200;
     }
 
-    public static void async_get(TGS_Url url, TGS_Func_In1<Response> onResponse) { 
-        TGS_UnSafe.run(() -> {
+    public static void async_get(TGS_Url url, TGS_FuncMTUCE_In1<Response> onResponse) { 
+        TGS_FuncMTCEUtils.run(() -> {
             var builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url.toString()));
             builder.sendRequest(null, new RequestCallback() {
                 @Override
@@ -41,8 +42,8 @@ public class TGC_UrlRequestUtils {
         });
     }
 
-    public static void async_post(TGS_Url url, CharSequence requestData, TGS_Func_In1<Response> onResponse) {
-        TGS_UnSafe.run(() -> {
+    public static void async_post(TGS_Url url, CharSequence requestData, TGS_FuncMTUCE_In1<Response> onResponse) {
+        TGS_FuncMTCEUtils.run(() -> {
             var builder = new RequestBuilder(RequestBuilder.POST, URL.encode(url.toString()));
             builder.setHeader("Content-type", "application/x-www-form-urlencoded");
             builder.sendRequest(requestData.toString(), new RequestCallback() {

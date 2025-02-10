@@ -1,11 +1,13 @@
 package com.tugalsan.api.url.client;
 
-import com.tugalsan.api.unsafe.client.*;
+import com.tugalsan.api.function.client.maythrow.checkedexceptions.TGS_FuncMTCEUtils;
+
+
 
 public class TGC_UrlUtils {
 
     public static String parseIPAndPort(TGS_Url url) {
-        return TGS_UnSafe.call(() -> {
+        return TGS_FuncMTCEUtils.call(() -> {
             var urlStr = url.toString();
             var ss = TGS_UrlUtils.isSecure(url) ? "https://" : "http://";
             var s = urlStr.indexOf(ss);
@@ -17,7 +19,7 @@ public class TGC_UrlUtils {
     }
 
     public static String parsePort(CharSequence ipAndPort) {
-        return TGS_UnSafe.call(() -> {
+        return TGS_FuncMTCEUtils.call(() -> {
             var ipAndPortStr = ipAndPort.toString();
             var ss = ":";
             var s = ipAndPortStr.indexOf(ss);
@@ -26,7 +28,7 @@ public class TGC_UrlUtils {
     }
 
     public static String parseIp(CharSequence ipAndPort) {
-        return TGS_UnSafe.call(() -> {
+        return TGS_FuncMTCEUtils.call(() -> {
             var ipAndPortStr = ipAndPort.toString();
             var ss = ":";
             var s = ipAndPortStr.indexOf(ss);

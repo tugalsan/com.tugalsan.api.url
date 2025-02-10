@@ -6,12 +6,13 @@ import java.nio.file.*;
 import javax.servlet.http.*;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
-import com.tugalsan.api.function.client.TGS_Func_OutTyped_In1;
+import com.tugalsan.api.function.client.maythrow.checkedexceptions.TGS_FuncMTCEUtils;
+import com.tugalsan.api.function.client.maythrow.uncheckedexceptions.TGS_FuncMTUCE_OutTyped_In1;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.string.client.TGS_StringUtils;
 import com.tugalsan.api.thread.server.sync.TS_ThreadSyncLst;
 import com.tugalsan.api.union.client.TGS_UnionExcuse;
-import com.tugalsan.api.unsafe.client.*;
+
 
 public class TS_UrlUtils {
 
@@ -19,7 +20,7 @@ public class TS_UrlUtils {
 
     public static TGS_UnionExcuse<String> mime(TGS_Url urlFile) {
         {
-            var typeByFileNameMap = TGS_UnSafe.call(() -> {
+            var typeByFileNameMap = TGS_FuncMTCEUtils.call(() -> {
                 var type = URLConnection.getFileNameMap().getContentTypeFor(TGS_UrlUtils.getFileNameFull(urlFile)).replace(";charset=UTF-8", "");
                 return TGS_StringUtils.cmn().isPresent(type) && type.length() < 5 ? type : null;
             }, e -> null);
@@ -28,7 +29,7 @@ public class TS_UrlUtils {
             }
         }
         {
-            var typeByURLConnection = TGS_UnSafe.call(() -> {
+            var typeByURLConnection = TGS_FuncMTCEUtils.call(() -> {
                 var url = new URI(urlFile.url.toString()).toURL();
                 return url.openConnection().getContentType().replace(";charset=UTF-8", "");
             }, e -> null);
@@ -44,7 +45,7 @@ public class TS_UrlUtils {
         }
         return TGS_UnionExcuse.ofExcuse(d.className, "mime", "Cannot detect type for " + urlFile);
     }
-    final public static TS_ThreadSyncLst<TGS_Func_OutTyped_In1<String, TGS_Url>> mime_addon = TS_ThreadSyncLst.ofSlowWrite();
+    final public static TS_ThreadSyncLst<TGS_FuncMTUCE_OutTyped_In1<String, TGS_Url>> mime_addon = TS_ThreadSyncLst.ofSlowWrite();
 
     public static TGS_Url toUrl(HttpServletRequest rq) {
         var protocol = rq.getScheme();             // http
@@ -70,7 +71,7 @@ public class TS_UrlUtils {
     }
 
     public boolean isReachable(TGS_Url urlo, Integer optionalTimeOut) {
-        var url = TGS_UnSafe.call(() -> URI.create(urlo.toString()).toURL(), e -> null);
+        var url = TGS_FuncMTCEUtils.call(() -> URI.create(urlo.toString()).toURL(), e -> null);
         if (url == null) {
             return false;
         }
@@ -94,7 +95,7 @@ public class TS_UrlUtils {
     }
 
     public Long getLengthInBytes(TGS_Url urlo) {
-        var url = TGS_UnSafe.call(() -> URI.create(urlo.toString()).toURL(), e -> null);
+        var url = TGS_FuncMTCEUtils.call(() -> URI.create(urlo.toString()).toURL(), e -> null);
         if (url == null) {
             return null;
         }
@@ -115,15 +116,15 @@ public class TS_UrlUtils {
     }
 
     public InputStream newInputStream(TGS_Url url) {
-        return TGS_UnSafe.call(() -> URI.create(url.toString()).toURL().openConnection().getInputStream());
+        return TGS_FuncMTCEUtils.call(() -> URI.create(url.toString()).toURL().openConnection().getInputStream());
     }
 
     public OutputStream newOutputStream(TGS_Url url) {
-        return TGS_UnSafe.call(() -> URI.create(url.toString()).toURL().openConnection().getOutputStream());
+        return TGS_FuncMTCEUtils.call(() -> URI.create(url.toString()).toURL().openConnection().getOutputStream());
     }
 
     public static TGS_UnionExcuse<TGS_Url> toUrl(Path file) {
-        return TGS_UnSafe.call(() -> {
+        return TGS_FuncMTCEUtils.call(() -> {
             var url = TGS_Url.of(file.toUri().toURL().toExternalForm());
             return TGS_UnionExcuse.of(url);
         }, e -> TGS_UnionExcuse.ofExcuse(e));
@@ -134,7 +135,7 @@ public class TS_UrlUtils {
     }
 
     public static boolean isUrl(CharSequence str) {
-        return TGS_UnSafe.call(() -> {
+        return TGS_FuncMTCEUtils.call(() -> {
             URI.create(str.toString()).toURL();
             return true;
         }, e -> false);
