@@ -56,7 +56,7 @@ public class TGS_UrlParserHost implements Serializable {
                 domainPort = domainPort.substring(0, domainPort.length() - 1);
             }
 //            System.out.println("hostPort: " + hostPort);
-            port = TGS_CastUtils.toInteger(domainPort);
+            port = TGS_CastUtils.toInteger(domainPort).orElse(null);
 //            System.out.println("port: " + port);
             domain = domain.substring(0, idxPort);
 //            System.out.println("name: " + name);

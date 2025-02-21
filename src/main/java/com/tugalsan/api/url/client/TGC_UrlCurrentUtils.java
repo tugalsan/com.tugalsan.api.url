@@ -16,7 +16,7 @@ public class TGC_UrlCurrentUtils {
     }
 
     public static Integer getServerPort() {
-        return TGS_CastUtils.toInteger(Window.Location.getPort());
+        return TGS_CastUtils.toInteger(Window.Location.getPort()).orElse(null);
     }
 
     public static String getServerDomainOrIpAndPort() {//localhost:8443

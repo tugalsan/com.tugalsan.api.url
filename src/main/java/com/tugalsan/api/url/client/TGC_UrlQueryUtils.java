@@ -54,8 +54,7 @@ public class TGC_UrlQueryUtils {
 
     public static Long getParameterValue(TGS_Url url, CharSequence paramName, Long defaultValue) {
         var strValue = getParameterValue(url, paramName, String.valueOf(defaultValue));
-        var lngValue = TGS_CastUtils.toLong(strValue);
-        return lngValue == null ? defaultValue : lngValue;
+        return TGS_CastUtils.toLong(strValue, defaultValue);
     }
 
     public static String getParameterValue(TGS_Url url, CharSequence paramName, CharSequence defaultValue) {
