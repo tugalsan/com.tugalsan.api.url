@@ -72,7 +72,8 @@ public class TGC_UrlQueryUtils {
                 d.ci("getParameters", "found", pairParsed[0], paramName);
                 var value = pairParsed[1];
                 d.ci("getParameters", "valueOnce", value);
-                var result = value == null || value.isEmpty() ? (defaultValue == null ? null : defaultValue.toString()) : value;
+                var defaultValueStr = defaultValue == null ? null : defaultValue.toString();
+                var result = value == null || value.isEmpty() ? defaultValueStr : value;
                 d.ci("getParameters", "valueTwice", result);
                 return result;
             }
