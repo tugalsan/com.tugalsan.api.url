@@ -59,11 +59,9 @@ public class TS_UrlUtils {
 
     public static void mime_addon_with_params(String... paramNames) {
         Arrays.asList(paramNames).forEach(paramName -> {
-            var foundItem = MIME_ADDONS.stream().filter(ma -> ma.name().equals(paramName)).findAny().orElse(null);
-            if (foundItem != null) {
-                MIME_ADDONS.removeAll(foundItem);
+            if (MIME_ADDONS.stream().noneMatch(ma -> ma.name().equals(paramName))) {
+                MIME_ADDONS.add(new MimeAddon(paramName, urlFile -> mime_with_param(urlFile, paramName)));
             }
-            MIME_ADDONS.add(new MimeAddon(paramName, urlFile -> mime_with_param(urlFile, paramName)));
         });
     }
 
