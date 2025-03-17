@@ -57,9 +57,9 @@ public class TS_UrlUtils {
         return URLConnection.getFileNameMap().getContentTypeFor(TGS_UrlQueryUtils.param64UrlSafe_2_readable(param.valueSafe));
     }
 
-    public static void mime_addon_with_params(TGS_Url urlFile, String... paramNames) {
+    public static void mime_addon_with_params(String... paramNames) {
         Arrays.asList(paramNames).forEach(paramName -> {
-            mime_addon.add(u -> mime_with_param(u, paramName));
+            mime_addon.add(urlFile -> mime_with_param(urlFile, paramName));
         });
     }
     final private static TS_ThreadSyncLst<TGS_FuncMTUCE_OutTyped_In1<String, TGS_Url>> mime_addon = TS_ThreadSyncLst.ofSlowWrite();
