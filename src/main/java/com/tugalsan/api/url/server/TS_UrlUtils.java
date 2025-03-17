@@ -39,7 +39,7 @@ public class TS_UrlUtils {
             }
         }
         {
-            var typeByAddon = mime_addon.stream().map(addon -> addon.call(urlFile)).filter(type -> type != null).findAny().orElse(null);
+            var typeByAddon = MIME_ADDONS.stream().map(addon -> addon.caller.call(urlFile)).filter(type -> type != null).findAny().orElse(null);
             if (typeByAddon != null) {
                 return TGS_UnionExcuse.of(typeByAddon);
             }
@@ -59,10 +59,18 @@ public class TS_UrlUtils {
 
     public static void mime_addon_with_params(String... paramNames) {
         Arrays.asList(paramNames).forEach(paramName -> {
-            mime_addon.add(urlFile -> mime_with_param(urlFile, paramName));
+            var foundItem = MIME_ADDONS.stream().filter(ma -> ma.name().equals(paramName)).findAny().orElse(null);
+            if (foundItem != null) {
+                MIME_ADDONS.removeAll(foundItem);
+            }
+            MIME_ADDONS.add(new MimeAddon(paramName, urlFile -> mime_with_param(urlFile, paramName)));
         });
     }
-    final private static TS_ThreadSyncLst<TGS_FuncMTUCE_OutTyped_In1<String, TGS_Url>> mime_addon = TS_ThreadSyncLst.ofSlowWrite();
+
+    private record MimeAddon(String name, TGS_FuncMTUCE_OutTyped_In1<String, TGS_Url> caller) {
+
+    }
+    final private static TS_ThreadSyncLst<MimeAddon> MIME_ADDONS = TS_ThreadSyncLst.ofSlowWrite();
 
     public static TGS_Url toUrl(HttpServletRequest rq) {
         var protocol = rq.getScheme();             // http
