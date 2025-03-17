@@ -12,7 +12,8 @@ import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.string.client.TGS_StringUtils;
 import com.tugalsan.api.thread.server.sync.TS_ThreadSyncLst;
 import com.tugalsan.api.union.client.TGS_UnionExcuse;
-
+import com.tugalsan.api.url.client.parser.TGS_UrlParser;
+import java.util.Arrays;
 
 public class TS_UrlUtils {
 
@@ -45,7 +46,23 @@ public class TS_UrlUtils {
         }
         return TGS_UnionExcuse.ofExcuse(d.className, "mime", "Cannot detect type for " + urlFile);
     }
-    final public static TS_ThreadSyncLst<TGS_FuncMTUCE_OutTyped_In1<String, TGS_Url>> mime_addon = TS_ThreadSyncLst.ofSlowWrite();
+
+    private static String mime_with_param(TGS_Url urlFile, String paramName) {
+        var param = TGS_UrlParser.of(urlFile).quary.params.stream()
+                .filter(p -> p.name.toString().equals(paramName))
+                .findAny().orElse(null);
+        if (param == null) {
+            return null;
+        }
+        return URLConnection.getFileNameMap().getContentTypeFor(TGS_UrlQueryUtils.param64UrlSafe_2_readable(param.valueSafe));
+    }
+
+    public static void mime_addon_with_params(TGS_Url urlFile, String... paramNames) {
+        Arrays.asList(paramNames).forEach(paramName -> {
+            mime_addon.add(u -> mime_with_param(u, paramName));
+        });
+    }
+    final private static TS_ThreadSyncLst<TGS_FuncMTUCE_OutTyped_In1<String, TGS_Url>> mime_addon = TS_ThreadSyncLst.ofSlowWrite();
 
     public static TGS_Url toUrl(HttpServletRequest rq) {
         var protocol = rq.getScheme();             // http
