@@ -1,8 +1,8 @@
 package com.tugalsan.api.url.client;
 
 import com.google.gwt.http.client.*;
-import com.tugalsan.api.function.client.maythrow.checkedexceptions.TGS_FuncMTCEUtils;
-import com.tugalsan.api.function.client.maythrow.uncheckedexceptions.TGS_FuncMTUCE_In1;
+import com.tugalsan.api.function.client.maythrowexceptions.checked.TGS_FuncMTCUtils;
+import com.tugalsan.api.function.client.maythrowexceptions.unchecked.TGS_FuncMTU_In1;
 
 import com.tugalsan.api.log.client.TGC_Log;
 
@@ -15,8 +15,8 @@ public class TGC_UrlRequestUtils {
         return 200;
     }
 
-    public static void async_get(TGS_Url url, TGS_FuncMTUCE_In1<Response> onResponse) { 
-        TGS_FuncMTCEUtils.run(() -> {
+    public static void async_get(TGS_Url url, TGS_FuncMTU_In1<Response> onResponse) { 
+        TGS_FuncMTCUtils.run(() -> {
             var builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url.toString()));
             builder.sendRequest(null, new RequestCallback() {
                 @Override
@@ -42,8 +42,8 @@ public class TGC_UrlRequestUtils {
         });
     }
 
-    public static void async_post(TGS_Url url, CharSequence requestData, TGS_FuncMTUCE_In1<Response> onResponse) {
-        TGS_FuncMTCEUtils.run(() -> {
+    public static void async_post(TGS_Url url, CharSequence requestData, TGS_FuncMTU_In1<Response> onResponse) {
+        TGS_FuncMTCUtils.run(() -> {
             var builder = new RequestBuilder(RequestBuilder.POST, URL.encode(url.toString()));
             builder.setHeader("Content-type", "application/x-www-form-urlencoded");
             builder.sendRequest(requestData.toString(), new RequestCallback() {

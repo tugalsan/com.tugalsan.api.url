@@ -6,8 +6,8 @@ import java.nio.file.*;
 import javax.servlet.http.*;
 import com.tugalsan.api.url.client.*;
 import com.tugalsan.api.file.server.*;
-import com.tugalsan.api.function.client.maythrow.checkedexceptions.TGS_FuncMTCEUtils;
-import com.tugalsan.api.function.client.maythrow.uncheckedexceptions.TGS_FuncMTUCE_OutTyped_In1;
+import com.tugalsan.api.function.client.maythrowexceptions.checked.TGS_FuncMTCUtils;
+import com.tugalsan.api.function.client.maythrowexceptions.unchecked.TGS_FuncMTU_OutTyped_In1;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.string.client.TGS_StringUtils;
 import com.tugalsan.api.thread.server.sync.TS_ThreadSyncLst;
@@ -21,7 +21,7 @@ public class TS_UrlUtils {
 
     public static TGS_UnionExcuse<String> mime(TGS_Url urlFile) {
         {
-            var typeByFileNameMap = TGS_FuncMTCEUtils.call(() -> {
+            var typeByFileNameMap = TGS_FuncMTCUtils.call(() -> {
                 var type = URLConnection.getFileNameMap().getContentTypeFor(TGS_UrlUtils.getFileNameFull(urlFile)).replace(";charset=UTF-8", "");
                 return TGS_StringUtils.cmn().isPresent(type) && type.length() < 5 ? type : null;
             }, e -> null);
@@ -30,7 +30,7 @@ public class TS_UrlUtils {
             }
         }
         {
-            var typeByURLConnection = TGS_FuncMTCEUtils.call(() -> {
+            var typeByURLConnection = TGS_FuncMTCUtils.call(() -> {
                 var url = new URI(urlFile.url.toString()).toURL();
                 return url.openConnection().getContentType().replace(";charset=UTF-8", "");
             }, e -> null);
@@ -65,7 +65,7 @@ public class TS_UrlUtils {
         });
     }
 
-    private record MimeAddon(String name, TGS_FuncMTUCE_OutTyped_In1<String, TGS_Url> caller) {
+    private record MimeAddon(String name, TGS_FuncMTU_OutTyped_In1<String, TGS_Url> caller) {
 
     }
     final private static TS_ThreadSyncLst<MimeAddon> MIME_ADDONS = TS_ThreadSyncLst.ofSlowWrite();
@@ -94,7 +94,7 @@ public class TS_UrlUtils {
     }
 
     public boolean isReachable(TGS_Url urlo, Integer optionalTimeOut) {
-        var url = TGS_FuncMTCEUtils.call(() -> URI.create(urlo.toString()).toURL(), e -> null);
+        var url = TGS_FuncMTCUtils.call(() -> URI.create(urlo.toString()).toURL(), e -> null);
         if (url == null) {
             return false;
         }
@@ -118,7 +118,7 @@ public class TS_UrlUtils {
     }
 
     public Long getLengthInBytes(TGS_Url urlo) {
-        var url = TGS_FuncMTCEUtils.call(() -> URI.create(urlo.toString()).toURL(), e -> null);
+        var url = TGS_FuncMTCUtils.call(() -> URI.create(urlo.toString()).toURL(), e -> null);
         if (url == null) {
             return null;
         }
@@ -139,15 +139,15 @@ public class TS_UrlUtils {
     }
 
     public InputStream newInputStream(TGS_Url url) {
-        return TGS_FuncMTCEUtils.call(() -> URI.create(url.toString()).toURL().openConnection().getInputStream());
+        return TGS_FuncMTCUtils.call(() -> URI.create(url.toString()).toURL().openConnection().getInputStream());
     }
 
     public OutputStream newOutputStream(TGS_Url url) {
-        return TGS_FuncMTCEUtils.call(() -> URI.create(url.toString()).toURL().openConnection().getOutputStream());
+        return TGS_FuncMTCUtils.call(() -> URI.create(url.toString()).toURL().openConnection().getOutputStream());
     }
 
     public static TGS_UnionExcuse<TGS_Url> toUrl(Path file) {
-        return TGS_FuncMTCEUtils.call(() -> {
+        return TGS_FuncMTCUtils.call(() -> {
             var url = TGS_Url.of(file.toUri().toURL().toExternalForm());
             return TGS_UnionExcuse.of(url);
         }, e -> TGS_UnionExcuse.ofExcuse(e));
@@ -158,7 +158,7 @@ public class TS_UrlUtils {
     }
 
     public static boolean isUrl(CharSequence str) {
-        return TGS_FuncMTCEUtils.call(() -> {
+        return TGS_FuncMTCUtils.call(() -> {
             URI.create(str.toString()).toURL();
             return true;
         }, e -> false);
